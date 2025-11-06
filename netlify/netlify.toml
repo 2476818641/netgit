@@ -1,28 +1,11 @@
 # netlify/netlify.toml
 [build]
-  command = "npm install --prefix netlify && npm run build --prefix netlify" # 先运行生成HTML的脚本
-  publish = "netlify/build" # 你的静态页面目录
-  functions = "netlify/functions" # 指定 Netlify Functions 的目录
+  command = "npm install && npm run build" # Netlify CLI 通常会自动进入 Base directory
+  publish = "build"
+  functions = "functions"
+  
+# Base directory 在 Netlify UI 中设置，或者在这里指定
+# [build.environment]
+#   BASE_DIR = "netlify"
 
-[[redirects]]
-  # 将所有代理请求转发到 Netlify Functions
-  from = "/git/*"
-  to = "/.netlify/functions/proxy"
-  status = 200
-
-[[redirects]]
-  from = "/docker/*"
-  to = "/.netlify/functions/proxy"
-  status = 200
-
-[[redirects]]
-  from = "/catbox/*"
-  to = "/.netlify/functions/proxy"
-  status = 200
-
-[[redirects]]
-  # 任何其他请求都指向静态文件 /index.html
-  # 如果 build/index.html 存在，会优先提供
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# 不再需要 redirects 规则
