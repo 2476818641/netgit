@@ -1,7 +1,7 @@
 # NetGit - 双平台通用代理服务 🚀
 
 [![一键部署到 Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/2476818641/netgit)
-[![一键部署到 Cloudflare Pages](https://static.cloudflareinsights.com/pages/media/deploy-with-cloudflare-pages.svg)](https://deploy.workers.cloudflare.com/?url=https%3A%F%2Fgithub.com%2F2476818641%2Fnetgit)
+[![一键部署到 Cloudflare Pages](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/2476818641/netgit)
 
 **NetGit** 是一个基于 Netlify 和 Cloudflare Pages Functions 的双平台通用代理服务。它旨在提供灵活、快速的代理能力，并最大程度地简化部署流程，让您能轻松拥有自己的专属代理。
 
