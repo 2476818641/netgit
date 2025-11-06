@@ -1,0 +1,11 @@
+{
+  "name": "netlify-proxy-frontend",
+  "version": "1.0.0",
+  "description": "Static frontend and functions for Netlify proxy.",
+  "main": "generate-home.js",
+  "type": "module",
+  "scripts": {
+    "build": "node generate-home.js"
+  },
+  "devDependencies": {}
+}
