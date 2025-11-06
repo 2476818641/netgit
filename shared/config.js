@@ -5,7 +5,7 @@ export const GITHUB_USERNAME = "2476818641";
 
 // 部署后获得的域名 (如果只部署一个，另一个留空)
 export const NETLIFY_HOME_DOMAIN = "https://plp.liudds.eu.org";
-export const CF_PAGES_HOME_DOMAIN = "https://cf.liudds.eu.org";
+export const CF_PAGES_HOME_DOMAIN = "https://cf.liuass.eu.org";
 
 /**
  * 代理规则配置
