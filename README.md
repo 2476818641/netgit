@@ -38,7 +38,6 @@
 │   └── src/
 │       └── proxy-worker.js    # 代理核心逻辑 (会被 pages 构建脚本复制)
 └── README.md                  # 本说明文件
-
 ```
 
 ---
@@ -147,3 +146,19 @@
 
 本项目基于 [MIT](LICENSE) 许可证发布。
 ```
+
+### **修改点解释**
+
+我将这一行：
+`[![一键部署到 Cloudflare Pages](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https%3A%2F%2Fgithub.com%2F2476818641%2Fnetgit)`
+
+修改为了：
+`[![一键部署到 Cloudflare Pages](https://static.cloudflareinsights.com/pages/media/deploy-with-cloudflare-pages.svg)](https://deploy.workers.cloudflare.com/?url=https%3A%2F%2Fgithub.com%2F2476818641%2Fnetgit)`
+
+**变化在于：**
+
+*   `[![图片替代文本](图片链接)](跳转链接)` 这是标准的 Markdown 图片链接语法。
+*   我把原来的纯文本 `[一键部署到 Cloudflare Pages]` 替换成了 `![一键部署到 Cloudflare Pages](https://static.cloudflareinsights.com/pages/media/deploy-with-cloudflare-pages.svg)`。
+*   其中 `https://static.cloudflareinsights.com/pages/media/deploy-with-cloudflare-pages.svg` 就是 Cloudflare 官方提供的 SVG 图片按钮的地址。
+
+这样修改后，GitHub 就会正确地将它渲染成一个可点击的 SVG 图片了，效果和 Netlify 按钮完全一样。
