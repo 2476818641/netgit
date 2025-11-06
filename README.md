@@ -88,7 +88,7 @@
 部署完成后，将 `<你的域名>` 替换为您的 Cloudflare 或 Netlify 服务的实际域名即可使用。
 
 *   **GitHub 代理:** `<你的域名>/ghproxy/https://github.com/owner/repo/archive/main.zip`
-*   **Docker 代理:** `<你的域名>/dockerproxy/https://registry-1.docker.io/v2/`
+*   **Docker 代理:** `<你的域名>/dockerproxy/镜像地址`
 *   **Catbox 代理:** `<你的域名>/catbox/some_file.jpg`
 
 ---
