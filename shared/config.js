@@ -41,7 +41,7 @@ export const proxyRules = {
     type: 'path',
     target: 'https://catbox.moe',
     description: 'Catbox.moe 文件代理',
-    examplePath: 'lq52ie.jpg'
+    examplePath: 'qwm4t7.png'
   }
 };
 
