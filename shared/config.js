@@ -39,7 +39,7 @@ export const proxyRules = {
   // Catbox 代理: 切换为路径映射模式
   '/catbox/': {
     type: 'path',
-    target: 'https://files.catbox.moe',
+    target: 'https://catbox.moe',
     description: 'Catbox.moe 文件代理',
     examplePath: 'lq52ie.jpg'
   }
