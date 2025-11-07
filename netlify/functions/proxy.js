@@ -1,55 +1,36 @@
 // netlify/functions/proxy.js
 
-import { proxyRules } from '../../shared/config.js';
+import { handleRequest } from '../../shared/proxy-logic.js';
 
 export default async (req) => {
-    const url = new URL(req.url);
-    const path = url.pathname;
+    // Netlify 将原始 Node 请求对象转换为标准的 Request 对象
+    const request = new Request(req);
+    const result = await handleRequest(request);
 
-    for (const prefix in proxyRules) {
-        if (path.startsWith(prefix)) {
-            const rule = proxyRules[prefix];
-            let targetUrlStr;
+    switch (result.status) {
+        case 'proxy': {
+            const newRequest = new Request(result.targetUrl, {
+                headers: request.headers,
+                method: request.method,
+                body: request.body,
+                redirect: 'follow'
+            });
+            // 直接返回 fetch 的结果，Netlify 会自动处理
+            return fetch(newRequest);
+        }
 
-            if (rule.type === 'path') {
-                const subpath = path.substring(prefix.length);
-                targetUrlStr = `${rule.target}/${subpath}${url.search}`;
-            } else if (rule.type === 'url') {
-                targetUrlStr = path.substring(prefix.length);
-                 if (url.search) {
-                        targetUrlStr += url.search;
-                    }
-                try {
-                    let targetDomain = new URL(targetUrlStr).hostname;
-                    if (!rule.allowedDomains.some(domain => targetDomain === domain || targetDomain.endsWith('.' + domain))) {
-                        return new Response('Forbidden: Domain not allowed.', { status: 403 });
-                    }
-                } catch (e) {
-                    return new Response('Bad Request: Invalid target URL.', { status: 400 });
-                }
-            }
+        case 'error': {
+            return new Response(result.message, { status: result.statusCode });
+        }
 
-            if (targetUrlStr) {
-                // Netlify Functions 中，req.headers 是一个对象，而不是 Headers 实例
-                // 需要直接传递给 fetch
-                const newRequest = new Request(targetUrlStr, {
-                    headers: req.headers,
-                    method: req.method,
-                    // Netlify req.body 是字符串或 null
-                    body: req.body,
-                    redirect: 'follow'
-                });
-                // 直接返回 fetch 的结果，Netlify 会自动处理 ReadableStream
-                return fetch(newRequest);
-            }
+        case 'not_found':
+        default: {
+            // 在 Netlify Functions 中，如果没有匹配，直接返回 404
+            return new Response('Not Found: No matching proxy rule.', { status: 404 });
         }
     }
-
-    // 如果没有匹配到任何规则，返回 404
-    return new Response('Not Found: No matching proxy rule.', { status: 404 });
 };
 
-// 确保函数能处理所有路径
 export const config = {
     path: "/*"
 };
