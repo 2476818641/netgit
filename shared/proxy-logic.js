@@ -2,11 +2,6 @@
 
 import { proxyRules } from './config.js';
 
-/**
- * 处理代理请求的核心逻辑
- * @param {Request} request - 原始请求对象
- * @returns {Promise<object>} - 返回一个包含处理结果的对象
- */
 export async function handleRequest(request) {
     const url = new URL(request.url);
     const path = url.pathname;
@@ -40,6 +35,10 @@ export async function handleRequest(request) {
                         statusCode: 400 
                     };
                 }
+            } else if (rule.type === 'host') {
+                const subpath = path.substring(prefix.length);
+                const targetProtocol = rule.target.startsWith('http') ? '' : 'https://';
+                targetUrlStr = `${targetProtocol}${rule.target}/${subpath}${url.search}`;
             }
 
             if (targetUrlStr) {
@@ -51,6 +50,5 @@ export async function handleRequest(request) {
         }
     }
 
-    // 如果没有匹配到任何规则
     return { status: 'not_found' };
 }
