@@ -42,6 +42,12 @@ export const proxyRules = {
     target: 'https://files.catbox.moe',
     description: 'Catbox.moe 文件代理',
     examplePath: 'yqh1it.png' 
+  },
+  '/ssh/': {
+    type: 'path',
+    target: 'https://subsequent-ardelle-bbttca23-472bd3ef.koyeb.app',
+    description: 'webssh 文件代理',
+    examplePath: '/' 
   }
 };
 
