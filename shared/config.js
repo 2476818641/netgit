@@ -46,7 +46,7 @@ export const proxyRules = {
   '/ssh/': {
     type: 'path',
     target: 'https://subsequent-ardelle-bbttca23-472bd3ef.koyeb.app',
-    description: 'webssh 文件代理',
+    description: 'webssh 加速',
     examplePath: '' 
   }
 };
