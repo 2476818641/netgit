@@ -42,6 +42,12 @@ export const proxyRules = {
     target: 'https://files.catbox.moe',
     description: 'Catbox.moe 文件代理',
     examplePath: 'yqh1it.png' 
+  },
+  // --- 新增：全域代理（主机名重写）规则 ---
+  '/ssh/': {
+    type: 'host',
+    description: '全域代理 (主机名重写)',
+    examplePath: 'subsequent-ardelle-bbttca23-472bd3ef.koyeb.app/ssh' // 使用一个简单的示例
   }
 };
 
@@ -55,19 +61,35 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
   let proxyListHtml = '';
   for (const prefix in proxyRules) {
     const rule = proxyRules[prefix];
-    const examplePathSegment = rule.type === 'url'
-      ? rule.examplePath.replace(/^https?:\/\//, '').replace(`/${rule.examplePath.split('/').slice(-1)[0]}`, `/${rule.examplePath.split('/').slice(-1)[0]}`) 
-      : rule.examplePath;
+    let examplePathSegment = rule.examplePath;
 
+    // 为 'url' 类型特殊处理示例路径以提高可读性
+    if (rule.type === 'url') {
+      examplePathSegment = rule.examplePath.replace(/^https?:\/\//, '');
+    }
+    
     const safeExamplePath = examplePathSegment || 'example'; 
     const fullExample = `${currentHomeDomain}${prefix}${safeExamplePath}`;
+    
+    let modeDescription = '';
+    switch (rule.type) {
+        case 'path':
+            modeDescription = '路径映射';
+            break;
+        case 'url':
+            modeDescription = 'URL 参数';
+            break;
+        case 'host':
+            modeDescription = '主机名重写';
+            break;
+    }
     
     proxyListHtml += `
       <div class="rule-card">
         <h3>${rule.description}</h3>
         <ul>
           <li><strong>代理路径:</strong> <code>${prefix}</code></li>
-          <li><strong>代理模式:</strong> <code>${rule.type === 'path' ? '路径映射' : 'URL 参数'}</code></li>
+          <li><strong>代理模式:</strong> <code>${modeDescription}</code></li>
           ${rule.target ? `<li><strong>目标源站:</strong> <code>${rule.target}</code></li>` : ''}
           <li><strong>使用示例:</strong> <pre><code>${fullExample}</code></pre></li>
         </ul>
@@ -185,7 +207,6 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
         .note { background-color: var(--note-bg-color); color: var(--note-text-color); border: 1px solid var(--note-border-color); padding: 1.2rem; border-radius: 8px; margin-top: 2rem; }
         .footer { text-align: center; margin-top: 3rem; border-top: 1px solid var(--card-border-color); padding-top: 2rem; font-size: 0.9em; color: #7f8c8d; }
         
-        /* Theme Toggle Switch */
         #theme-toggle {
             position: fixed;
             top: 1rem;
@@ -225,6 +246,8 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
         <div class="note">
             <strong>重要提示：</strong>
             <ul>
+                <!-- --- 更新：添加对新模式的解释 --- -->
+                <li><strong>主机名重写模式:</strong> 代理路径后跟上目标主机名和文件路径，例如 <code>/rewrite/example.com/path/to/file</code>。</li>
                 <li><strong>URL 参数模式:</strong> 代理路径后必须跟上完整的、在白名单内的 URL。</li>
                 <li><strong>路径映射模式:</strong> 代理路径后直接跟上目标站点的文件路径即可。这是 Docker 镜像代理所使用的模式。</li>
             </ul>
