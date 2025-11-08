@@ -76,6 +76,14 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
     const safeExamplePath = examplePathSegment || 'example'; 
     const fullExample = `${currentHomeDomain}${prefix}${safeExamplePath}`;
     
+    // [新增] 为使用示例添加带复制按钮的容器
+    const exampleHtml = `
+      <div class="example-wrapper">
+        <pre><code>${fullExample}</code></pre>
+        <button class="copy-btn" data-copy-text="${fullExample}" title="点击复制">复制</button>
+      </div>
+    `;
+
     proxyListHtml += `
       <div class="rule-card">
         <h3>${rule.description}</h3>
@@ -83,7 +91,7 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
           <li><strong>代理路径:</strong> <code>${prefix}</code></li>
           <li><strong>代理模式:</strong> <code>${modeDescription}</code></li>
           ${rule.target ? `<li><strong>目标源站:</strong> <code>${rule.target}</code></li>` : ''}
-          <li><strong>使用示例:</strong> <pre><code>${fullExample}</code></pre></li>
+          <li><strong>使用示例:</strong> ${exampleHtml}</li>
         </ul>
       </div>
     `;
@@ -142,6 +150,9 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
             --toggle-bg: #ccc;
             --toggle-fg: white;
             --toggle-icon: '🌙';
+            --copy-btn-bg: #e0e6ed;
+            --copy-btn-text: #333;
+            --copy-btn-hover-bg: #d1d9e2;
         }
 
         html[data-theme="dark"] {
@@ -161,6 +172,9 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
             --toggle-bg: #555;
             --toggle-fg: #1a1a1a;
             --toggle-icon: '☀️';
+            --copy-btn-bg: #444;
+            --copy-btn-text: #e0e0e0;
+            --copy-btn-hover-bg: #555;
         }
         
         body { 
@@ -221,13 +235,13 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
             border-radius: 8px; 
             overflow-x: auto; 
             font-size: 0.9em; 
-            white-space: pre-wrap;    /* 允许代码块内容换行 */
-            word-break: break-all;    /* 强制长单词或URL换行 */
+            white-space: pre-wrap;
+            word-break: break-all;
         }
         pre > code {
-            background-color: transparent; /* 重置 pre 内 code 的背景色 */
+            background-color: transparent;
             padding: 0;
-            word-break: normal; /* 在 pre-wrap 环境中允许正常断词 */
+            word-break: normal;
         }
         ul { 
             list-style-type: none; 
@@ -283,11 +297,36 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
             content: var(--toggle-icon); 
         }
         
-        /* [新增] 移动端优化媒体查询 */
+        /* [新增] 示例 URL 复制功能样式 */
+        .example-wrapper {
+            position: relative;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.5em;
+            right: 0.5em;
+            background-color: var(--copy-btn-bg);
+            color: var(--copy-btn-text);
+            border: none;
+            border-radius: 4px;
+            padding: 0.3em 0.6em;
+            font-size: 0.8em;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s, background-color 0.2s;
+        }
+        .example-wrapper:hover .copy-btn {
+            opacity: 1;
+        }
+        .copy-btn:hover {
+            background-color: var(--copy-btn-hover-bg);
+        }
+
+        /* 移动端优化 */
         @media (max-width: 768px) {
             body {
                 padding: 1rem;
-                -webkit-text-size-adjust: 100%; /* 防止 iOS 字体自动放大 */
+                -webkit-text-size-adjust: 100%;
             }
             .container {
                 padding: 1.5rem;
@@ -346,6 +385,7 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
 
     <script>
       (function() {
+        // 深色/浅色模式切换逻辑
         const themeToggle = document.getElementById('theme-toggle');
         const html = document.documentElement;
 
@@ -368,6 +408,27 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
         } else if (prefersDark) {
           applyTheme('dark');
         }
+
+        // [新增] 示例 URL 复制功能逻辑
+        document.addEventListener('click', function(event) {
+          if (event.target.classList.contains('copy-btn')) {
+            const button = event.target;
+            const textToCopy = button.dataset.copyText;
+
+            if (navigator.clipboard && textToCopy) {
+              navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '已复制!';
+                setTimeout(() => {
+                  button.textContent = originalText;
+                }, 2000);
+              }).catch(err => {
+                console.error('复制失败:', err);
+                alert('复制失败，请手动复制。');
+              });
+            }
+          }
+        });
       })();
     </script>
 </body>
