@@ -40,23 +40,7 @@ export async function handleRequest(request) {
                         statusCode: 400 
                     };
                 }
-            } else if (rule.type === 'host') { // --- 新增：处理主机名重写模式 ---
-                const remainingPath = path.substring(prefix.length);
-                const parts = remainingPath.split('/');
-                const hostname = parts.shift(); // 路径的第一部分作为主机名
-                const subpath = parts.join('/');   // 剩余部分作为路径
-
-                if (!hostname || hostname.indexOf('.') === -1) { // 基础校验，确保主机名存在且可能有效
-                    return {
-                        status: 'error',
-                        message: 'Bad Request: Invalid or missing hostname in the path.',
-                        statusCode: 400
-                    };
-                }
-
-                targetUrlStr = `https://${hostname}/${subpath}${url.search}`;
             }
-
 
             if (targetUrlStr) {
                 return {
