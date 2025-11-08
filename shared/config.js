@@ -47,7 +47,7 @@ export const proxyRules = {
     type: 'host',
     target: 'subsequent-ardelle-bbttca23-472bd3ef.koyeb.app', // 目标域名，无需协议
     description: 'Koyeb WebSSH 透明代理 (Host 模式)',
-    examplePath: '' // 假设这是您应用的一个资源路径
+    examplePath: ' ' 
   }
 };
 
