@@ -47,8 +47,8 @@ export const proxyRules = {
   '/ssh/': {
     type: 'host',
     target: 'subsequent-ardelle-bbttca23-472bd3ef.koyeb.app',
-    description: 'WebSSH 全路径代理',
-    examplePath: ' ' 
+    description: 'WebSSH 全路径代理 (主机模式)',
+    examplePath: ' (此模式下，访问 /ssh/ 会代理到目标服务器的 /ssh/)' 
   }
 };
 
