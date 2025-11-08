@@ -40,17 +40,6 @@ export async function handleRequest(request) {
                         statusCode: 400 
                     };
                 }
-            } else if (rule.type === 'host') {
-                // --- 新增的核心逻辑：处理 'host' 类型 ---
-                // 创建一个新的 URL 对象以便修改
-                const newUrl = new URL(request.url);
-                
-                // 直接将主机名替换为目标主机名
-                newUrl.hostname = rule.target;
-                
-                // 将修改后的 URL 对象转换回字符串
-                // 此时 URL 的路径和查询参数都保持原样
-                targetUrlStr = newUrl.toString();
             }
 
             if (targetUrlStr) {
