@@ -21,7 +21,6 @@ export const CF_PAGES_HOME_DOMAIN = "cf.liuass.eu.org";
 /**
  * 定义代理服务的规则。
  * type: 'url' - 代理路径后跟完整 URL；'path' - 代理路径映射到目标站点的路径。
- * type: 'host' - 仅重写主机名，保留原始请求的完整路径。
  * examplePath: 用于生成使用示例。
  * allowedDomains: type='url' 时，允许代理的域名列表。
  */
@@ -43,12 +42,6 @@ export const proxyRules = {
     target: 'https://files.catbox.moe',
     description: 'Catbox.moe 文件代理',
     examplePath: 'yqh1it.png' 
-  },
-  '/ssh/': {
-    type: 'host',
-    target: 'subsequent-ardelle-bbttca23-472bd3ef.koyeb.app',
-    description: 'WebSSH 全路径代理 (主机模式)',
-    examplePath: ' (此模式下，访问 /ssh/ 会代理到目标服务器的 /ssh/)' 
   }
 };
 
@@ -62,28 +55,19 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
   let proxyListHtml = '';
   for (const prefix in proxyRules) {
     const rule = proxyRules[prefix];
-    let examplePathSegment = rule.examplePath;
+    const examplePathSegment = rule.type === 'url'
+      ? rule.examplePath.replace(/^https?:\/\//, '').replace(`/${rule.examplePath.split('/').slice(-1)[0]}`, `/${rule.examplePath.split('/').slice(-1)[0]}`) 
+      : rule.examplePath;
 
-    if (rule.type === 'url') {
-      examplePathSegment = rule.examplePath.replace(/^https?:\/\//, '');
-    }
+    const safeExamplePath = examplePathSegment || 'example'; 
+    const fullExample = `${currentHomeDomain}${prefix}${safeExamplePath}`;
     
-    const fullExample = `${currentHomeDomain}${prefix}${examplePathSegment}`;
-    
-    let modeDescription = '';
-    switch (rule.type) {
-        case 'path': modeDescription = '路径映射'; break;
-        case 'url': modeDescription = 'URL 参数'; break;
-        case 'host': modeDescription = '主机重写'; break;
-        default: modeDescription = '未知';
-    }
-
     proxyListHtml += `
       <div class="rule-card">
         <h3>${rule.description}</h3>
         <ul>
           <li><strong>代理路径:</strong> <code>${prefix}</code></li>
-          <li><strong>代理模式:</strong> <code>${modeDescription}</code></li>
+          <li><strong>代理模式:</strong> <code>${rule.type === 'path' ? '路径映射' : 'URL 参数'}</code></li>
           ${rule.target ? `<li><strong>目标源站:</strong> <code>${rule.target}</code></li>` : ''}
           <li><strong>使用示例:</strong> <pre><code>${fullExample}</code></pre></li>
         </ul>
@@ -242,8 +226,7 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
             <strong>重要提示：</strong>
             <ul>
                 <li><strong>URL 参数模式:</strong> 代理路径后必须跟上完整的、在白名单内的 URL。</li>
-                <li><strong>路径映射模式:</strong> 代理路径后直接跟上目标站点的文件路径即可。</li>
-                <li><strong>主机重写模式:</strong> 请求将被完整转发到目标主机，包括原始请求路径 (如 /ssh/)。</li>
+                <li><strong>路径映射模式:</strong> 代理路径后直接跟上目标站点的文件路径即可。这是 Docker 镜像代理所使用的模式。</li>
             </ul>
             <p><strong>注意：</strong> 此页面仅为服务入口和规则说明。完整项目和部署细节请访问 <a href="${githubRepoUrl}" target="_blank" rel="noopener noreferrer">${githubRepoUrl}</a>。</p>
         </div>
@@ -277,4 +260,9 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
         } else if (prefersDark) {
           applyTheme('dark');
         }
-      })()
+      })();
+    </script>
+</body>
+</html>
+`;
+};
