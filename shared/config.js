@@ -20,7 +20,7 @@ export const CF_PAGES_HOME_DOMAIN = "cf.liuass.eu.org";
 
 /**
  * 定义代理服务的规则。
- * type: 'url' - 代理路径后跟完整 URL；'path' - 代理路径映射到目标站点的路径。
+ * type: 'url' - 代理路径后跟完整 URL；'path' - 代理路径映射到目标站点的路径； 'host' - 透明转发，保留头部信息。
  * examplePath: 用于生成使用示例。
  * allowedDomains: type='url' 时，允许代理的域名列表。
  */
@@ -42,6 +42,12 @@ export const proxyRules = {
     target: 'https://files.catbox.moe',
     description: 'Catbox.moe 文件代理',
     examplePath: 'yqh1it.png' 
+  },
+  '/ssh/': {
+    type: 'host',
+    target: 'app.koyeb.com', // 目标域名，无需协议
+    description: 'Koyeb WebSSH 透明代理 (Host 模式)',
+    examplePath: 'static/js/main.js' // 假设这是您应用的一个资源路径
   }
 };
 
@@ -55,8 +61,16 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
   let proxyListHtml = '';
   for (const prefix in proxyRules) {
     const rule = proxyRules[prefix];
+    let modeDescription = '';
+    switch(rule.type) {
+        case 'path': modeDescription = '路径映射'; break;
+        case 'url': modeDescription = 'URL 参数'; break;
+        case 'host': modeDescription = 'Host 模式 (透明转发)'; break;
+        default: modeDescription = '未知';
+    }
+
     const examplePathSegment = rule.type === 'url'
-      ? rule.examplePath.replace(/^https?:\/\//, '').replace(`/${rule.examplePath.split('/').slice(-1)[0]}`, `/${rule.examplePath.split('/').slice(-1)[0]}`) 
+      ? rule.examplePath.replace(/^https?:\/\//, '')
       : rule.examplePath;
 
     const safeExamplePath = examplePathSegment || 'example'; 
@@ -67,7 +81,7 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
         <h3>${rule.description}</h3>
         <ul>
           <li><strong>代理路径:</strong> <code>${prefix}</code></li>
-          <li><strong>代理模式:</strong> <code>${rule.type === 'path' ? '路径映射' : 'URL 参数'}</code></li>
+          <li><strong>代理模式:</strong> <code>${modeDescription}</code></li>
           ${rule.target ? `<li><strong>目标源站:</strong> <code>${rule.target}</code></li>` : ''}
           <li><strong>使用示例:</strong> <pre><code>${fullExample}</code></pre></li>
         </ul>
@@ -75,17 +89,13 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
     `;
   }
 
-  // --- SEO 优化配置 ---
   const projectName = "NetGit"; 
-  const repoName = "netgit"; // 假设你的仓库名是 netgit
+  const repoName = "netgit";
   const githubRepoUrl = `https://github.com/${GITHUB_USERNAME}/${repoName}`;
-
   const pageTitle = `${projectName} - 开源双平台代理服务`; 
   const pageDescription = `${projectName}: 开源双平台通用代理服务！轻松部署到 Cloudflare Pages & Netlify，为 GitHub, Docker Hub, Catbox 提供稳定代理。立即访问 GitHub 了解详情！`;
-
   const faviconSvg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>`;
 
-  // --- HTML 结构 ---
   return `
 <!DOCTYPE html>
 <html lang="zh-CN" data-theme="light">
@@ -96,7 +106,7 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
     <!-- SEO Meta Tags -->
     <title>${pageTitle}</title>
     <meta name="description" content="${pageDescription}">
-    <meta name="keywords" content="${projectName}, 代理服务, 开源, Cloudflare Pages, Netlify, GitHub代理, Docker代理, Catbox代理, 反向代理, CDN, 部署">
+    <meta name="keywords" content="${projectName}, 代理服务, 开源, Cloudflare Pages, Netlify, GitHub代理, Docker代理, Catbox代理, Koyeb代理, 反向代理, CDN, 部署, Host模式">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -172,20 +182,76 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
             border: 1px solid var(--card-border-color); 
             transition: background-color 0.3s, border-color 0.3s;
         }
-        h1 { color: var(--header-color); text-align: center; margin-bottom: 1rem; font-size: 2.2rem; border-bottom: 2px solid var(--card-border-color); padding-bottom: 0.5rem; }
-        h2 { color: var(--header-color); font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; }
-        h3 { color: var(--link-color); font-size: 1.2rem; margin-top: 1.5rem; }
-        .rule-card { border: 1px solid var(--card-border-color); padding: 0 1.5rem 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;}
-        code { background-color: var(--code-bg-color); padding: 0.3em 0.5em; border-radius: 4px; font-family: 'SF Mono', 'Menlo', 'Consolas', monospace; font-size: 0.9em; }
-        pre { background-color: var(--pre-bg-color); color: var(--pre-text-color); padding: 1em 1.5em; border-radius: 8px; overflow-x: auto; font-size: 0.9em; }
-        ul { list-style-type: none; padding-left: 0; }
-        li { margin-bottom: 0.8em; }
-        a { color: var(--link-color); text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        .note { background-color: var(--note-bg-color); color: var(--note-text-color); border: 1px solid var(--note-border-color); padding: 1.2rem; border-radius: 8px; margin-top: 2rem; }
-        .footer { text-align: center; margin-top: 3rem; border-top: 1px solid var(--card-border-color); padding-top: 2rem; font-size: 0.9em; color: #7f8c8d; }
-        
-        /* Theme Toggle Switch */
+        h1 { 
+            color: var(--header-color); 
+            text-align: center; 
+            margin-bottom: 1rem; 
+            font-size: 2.2rem; 
+            border-bottom: 2px solid var(--card-border-color); 
+            padding-bottom: 0.5rem; 
+        }
+        h2 { 
+            color: var(--header-color); 
+            font-size: 1.6rem; 
+            margin-top: 2rem; 
+            margin-bottom: 1rem; 
+        }
+        h3 { 
+            color: var(--link-color); 
+            font-size: 1.2rem; 
+            margin-top: 1.5rem; 
+        }
+        .rule-card { 
+            border: 1px solid var(--card-border-color); 
+            padding: 0 1.5rem 1.5rem; 
+            border-radius: 8px; 
+            margin-bottom: 1.5rem;
+        }
+        code { 
+            background-color: var(--code-bg-color); 
+            padding: 0.3em 0.5em; 
+            border-radius: 4px; 
+            font-family: 'SF Mono', 'Menlo', 'Consolas', monospace; 
+            font-size: 0.9em; 
+        }
+        pre { 
+            background-color: var(--pre-bg-color); 
+            color: var(--pre-text-color); 
+            padding: 1em 1.5em; 
+            border-radius: 8px; 
+            overflow-x: auto; 
+            font-size: 0.9em; 
+        }
+        ul { 
+            list-style-type: none; 
+            padding-left: 0; 
+        }
+        li { 
+            margin-bottom: 0.8em; 
+        }
+        a { 
+            color: var(--link-color); 
+            text-decoration: none; 
+        }
+        a:hover { 
+            text-decoration: underline; 
+        }
+        .note { 
+            background-color: var(--note-bg-color); 
+            color: var(--note-text-color); 
+            border: 1px solid var(--note-border-color); 
+            padding: 1.2rem; 
+            border-radius: 8px; 
+            margin-top: 2rem; 
+        }
+        .footer { 
+            text-align: center; 
+            margin-top: 3rem; 
+            border-top: 1px solid var(--card-border-color); 
+            padding-top: 2rem; 
+            font-size: 0.9em; 
+            color: #7f8c8d; 
+        }
         #theme-toggle {
             position: fixed;
             top: 1rem;
@@ -203,8 +269,12 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
             font-size: 1.2rem;
             transition: background-color 0.3s, transform 0.3s;
         }
-        #theme-toggle:hover { transform: scale(1.1); }
-        #theme-toggle::after { content: var(--toggle-icon); }
+        #theme-toggle:hover { 
+            transform: scale(1.1); 
+        }
+        #theme-toggle::after { 
+            content: var(--toggle-icon); 
+        }
     </style>
 </head>
 <body>
@@ -213,8 +283,9 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
     <div class="container">
         <h1>欢迎访问 ${projectName} 代理服务</h1> 
         
-        <p>这是一个由 <strong>${platformName || 'Cloudflare Pages/Netlify'}</strong> 托管的 ${projectName} 服务入口 (${currentHomeDomain.replace('https://', '')})。 
-           本服务旨在提供灵活、快速的代理能力，帮助您轻松访问 GitHub、Docker Hub 等资源。
+        <p>
+            这是一个由 <strong>${platformName || 'Cloudflare Pages/Netlify'}</strong> 托管的 ${projectName} 服务入口 (${currentHomeDomain.replace('https://', '')})。 
+            本服务旨在提供灵活、快速的代理能力，帮助您轻松访问 GitHub、Docker Hub 等资源。
         </p>
         
         <h2>🚀 ${projectName} 代理规则列表</h2>
@@ -226,13 +297,19 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
             <strong>重要提示：</strong>
             <ul>
                 <li><strong>URL 参数模式:</strong> 代理路径后必须跟上完整的、在白名单内的 URL。</li>
-                <li><strong>路径映射模式:</strong> 代理路径后直接跟上目标站点的文件路径即可。这是 Docker 镜像代理所使用的模式。</li>
+                <li><strong>路径映射模式:</strong> 代理路径后直接跟上目标站点的文件路径。</li>
+                <li><strong>Host 模式 (透明转发):</strong> 专为需要保留 Host 头等信息的应用设计。它会剥离代理路径，将剩余路径完整转发到目标域名。</li>
             </ul>
-            <p><strong>注意：</strong> 此页面仅为服务入口和规则说明。完整项目和部署细节请访问 <a href="${githubRepoUrl}" target="_blank" rel="noopener noreferrer">${githubRepoUrl}</a>。</p>
+            <p>
+                <strong>注意：</strong> 此页面仅为服务入口和规则说明。完整项目和部署细节请访问 
+                <a href="${githubRepoUrl}" target="_blank" rel="noopener noreferrer">${githubRepoUrl}</a>。
+            </p>
         </div>
 
         <div class="footer">
-            <p><a href="${githubRepoUrl}" target="_blank" rel="noopener noreferrer">查看 ${projectName} 源码 on GitHub</a></p>
+            <p>
+                <a href="${githubRepoUrl}" target="_blank" rel="noopener noreferrer">查看 ${projectName} 源码 on GitHub</a>
+            </p>
         </div>
     </div>
 
