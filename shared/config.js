@@ -1,10 +1,29 @@
 // shared/config.js
 
-export const GITHUB_USERNAME = "2476818641";
+/**
+ * GitHub 用户名，用于生成指向你 GitHub 仓库的链接。
+ * !! 重要 !! 请务必将其替换为您自己的 GitHub 用户名。
+ */
+export const GITHUB_USERNAME = "2476818641"; // 务必替换
 
-export const NETLIFY_HOME_DOMAIN = "https://plp.liudds.eu.org";
-export const CF_PAGES_HOME_DOMAIN = "https://cf.liuass.eu.org";
+/**
+ * 你的 Netlify 部署后获得的域名。
+ * 如果你未部署到 Netlify，请留空。
+ */
+export const NETLIFY_HOME_DOMAIN = ""; 
 
+/**
+ * 你的 Cloudflare Pages 部署后获得的域名。
+ * 如果你未部署到 Cloudflare Pages，请留空。
+ */
+export const CF_PAGES_HOME_DOMAIN = "cf.liuass.eu.org"; 
+
+/**
+ * 定义代理服务的规则。
+ * type: 'url' - 代理路径后跟完整 URL；'path' - 代理路径映射到目标站点的路径。
+ * examplePath: 用于生成使用示例。
+ * allowedDomains: type='url' 时，允许代理的域名列表。
+ */
 export const proxyRules = {
   '/ghproxy/': {
     type: 'url',
@@ -16,23 +35,32 @@ export const proxyRules = {
     type: 'path',
     target: 'https://registry-1.docker.io',
     description: 'Docker Hub 镜像代理',
-    examplePath: 'v2/'
+    examplePath: 'v2/' 
   },
   '/catbox/': {
     type: 'path',
     target: 'https://files.catbox.moe',
     description: 'Catbox.moe 文件代理',
-    examplePath: 'yqh1it.png'
+    examplePath: 'yqh1it.png' 
   }
 };
 
+/**
+ * 生成静态主页的 HTML 内容。
+ * @param {string} platformName - 部署的平台名称 (例如 "Cloudflare Pages", "Netlify")。
+ * @param {string} currentHomeDomain - 当前网站的主域名。
+ * @returns {string} - 生成的 HTML 字符串。
+ */
 export const generateStaticHomePage = (platformName, currentHomeDomain) => {
   let proxyListHtml = '';
   for (const prefix in proxyRules) {
     const rule = proxyRules[prefix];
-    const fullExample = rule.type === 'url' 
-      ? `${currentHomeDomain}${prefix}${rule.examplePath}` 
-      : `${currentHomeDomain}${prefix}${rule.examplePath}`;
+    const examplePathSegment = rule.type === 'url'
+      ? rule.examplePath.replace(/^https?:\/\//, '').replace(`/${rule.examplePath.split('/').slice(-1)[0]}`, `/${rule.examplePath.split('/').slice(-1)[0]}`) 
+      : rule.examplePath;
+
+    const safeExamplePath = examplePathSegment || 'example'; 
+    const fullExample = `${currentHomeDomain}${prefix}${safeExamplePath}`;
     
     proxyListHtml += `
       <div class="rule-card">
@@ -47,14 +75,45 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
     `;
   }
 
+  // --- SEO 优化配置 ---
+  const projectName = "NetGit"; 
+  const repoName = "netgit"; // 假设你的仓库名是 netgit
+  const githubRepoUrl = `https://github.com/${GITHUB_USERNAME}/${repoName}`;
+
+  const pageTitle = `${projectName} - 开源双平台代理服务`; 
+  const pageDescription = `${projectName}: 开源双平台通用代理服务！轻松部署到 Cloudflare Pages & Netlify，为 GitHub, Docker Hub, Catbox 提供稳定代理。立即访问 GitHub 了解详情！`;
+
+  const faviconSvg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>`;
+
+  // --- HTML 结构 ---
   return `
 <!DOCTYPE html>
 <html lang="zh-CN" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>github加速站 - ${currentHomeDomain.replace('https://', '')}</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌐</text></svg>">
+    
+    <!-- SEO Meta Tags -->
+    <title>${pageTitle}</title>
+    <meta name="description" content="${pageDescription}">
+    <meta name="keywords" content="${projectName}, 代理服务, 开源, Cloudflare Pages, Netlify, GitHub代理, Docker代理, Catbox代理, 反向代理, CDN, 部署">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="${currentHomeDomain}">
+    <meta property="og:title" content="${pageTitle}">
+    <meta property="og:description" content="${pageDescription}">
+    <meta property="og:image" content="${currentHomeDomain}/og-image.png"> 
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="${currentHomeDomain}">
+    <meta name="twitter:title" content="${pageTitle}">
+    <meta name="twitter:description" content="${pageDescription}">
+    <meta name="twitter:image" content="${currentHomeDomain}/twitter-image.png"> 
+
+    <link rel="icon" href="data:image/svg+xml,${encodeURIComponent(faviconSvg)}">
+    
     <style>
         :root {
             --bg-color: #f7f9fc;
@@ -152,10 +211,15 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
     <button id="theme-toggle" title="切换深色/浅色模式"></button>
     
     <div class="container">
-        <h1>欢迎访问您的代理服务</h1>
-        <p>此服务由 <strong>${platformName}</strong> 托管，为您提供定制化的反向代理功能。</p>
+        <h1>欢迎访问 ${projectName} 代理服务</h1> 
         
-        <h2>🚀 代理规则列表</h2>
+        <p>这是一个由 <strong>${platformName || 'Cloudflare Pages/Netlify'}</strong> 托管的 ${projectName} 服务入口 (${currentHomeDomain.replace('https://', '')})。 
+           本服务旨在提供灵活、快速的代理能力，帮助您轻松访问 GitHub、Docker Hub 等资源。
+        </p>
+        
+        <h2>🚀 ${projectName} 代理规则列表</h2>
+        <p>以下是该服务当前支持的代理规则，您可以方便地使用它们来访问特定的网络资源。</p>
+        
         ${proxyListHtml}
         
         <div class="note">
@@ -164,10 +228,11 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
                 <li><strong>URL 参数模式:</strong> 代理路径后必须跟上完整的、在白名单内的 URL。</li>
                 <li><strong>路径映射模式:</strong> 代理路径后直接跟上目标站点的文件路径即可。这是 Docker 镜像代理所使用的模式。</li>
             </ul>
+            <p><strong>注意：</strong> 此页面仅为服务入口和规则说明。完整项目和部署细节请访问 <a href="${githubRepoUrl}" target="_blank" rel="noopener noreferrer">${githubRepoUrl}</a>。</p>
         </div>
 
         <div class="footer">
-            <p><a href="https://github.com/${GITHUB_USERNAME}/netgit" target="_blank">查看源码 on GitHub</a></p>
+            <p><a href="${githubRepoUrl}" target="_blank" rel="noopener noreferrer">查看 ${projectName} 源码 on GitHub</a></p>
         </div>
     </div>
 
@@ -187,7 +252,6 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
           applyTheme(newTheme);
         });
 
-        // On page load, apply saved theme or system preference
         const savedTheme = localStorage.getItem('theme');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
