@@ -85,16 +85,9 @@ async function handleWebSocketProxy(request) {
     const newHeaders = new Headers(request.headers);
     newHeaders.set('Host', targetUrl.hostname);
     
-    // =======================================================================
-    //  ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼  新增的关键代码  ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
-    //
     //  伪造Origin头，使其与目标服务器的Host匹配，以绕过安全检查。
-    //  目标URL的协议（http/https）加上主机名，构成了新的Origin。
     newHeaders.set('Origin', `${targetUrl.protocol}//${targetUrl.hostname}`);
-    //
-    //  ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲  新增的关键代码  ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-    // =======================================================================
-
+    
     return fetch(targetUrl.toString(), {
         headers: newHeaders,
         method: request.method,
