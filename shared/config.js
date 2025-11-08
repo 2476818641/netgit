@@ -212,7 +212,7 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
             padding: 0.3em 0.5em; 
             border-radius: 4px; 
             font-family: 'SF Mono', 'Menlo', 'Consolas', monospace; 
-            font-size: 0.9em; 
+            font-size: 0.9em;
         }
         pre { 
             background-color: var(--pre-bg-color); 
@@ -221,6 +221,13 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
             border-radius: 8px; 
             overflow-x: auto; 
             font-size: 0.9em; 
+            white-space: pre-wrap;    /* 允许代码块内容换行 */
+            word-break: break-all;    /* 强制长单词或URL换行 */
+        }
+        pre > code {
+            background-color: transparent; /* 重置 pre 内 code 的背景色 */
+            padding: 0;
+            word-break: normal; /* 在 pre-wrap 环境中允许正常断词 */
         }
         ul { 
             list-style-type: none; 
@@ -274,6 +281,30 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
         }
         #theme-toggle::after { 
             content: var(--toggle-icon); 
+        }
+        
+        /* [新增] 移动端优化媒体查询 */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+                -webkit-text-size-adjust: 100%; /* 防止 iOS 字体自动放大 */
+            }
+            .container {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            h2 {
+                font-size: 1.4rem;
+            }
+            pre {
+                font-size: 0.85em;
+            }
+            #theme-toggle {
+                top: 0.5rem;
+                right: 0.5rem;
+            }
         }
     </style>
 </head>
