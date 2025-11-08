@@ -298,7 +298,7 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
             <ul>
                 <li><strong>URL 参数模式:</strong> 代理路径后必须跟上完整的、在白名单内的 URL。</li>
                 <li><strong>路径映射模式:</strong> 代理路径后直接跟上目标站点的文件路径。</li>
-                <li><strong>Host 模式 (透明转发):</strong> 专为需要保留 Host 头等信息的应用设计。它会剥离代理路径，将剩余路径完整转发到目标域名。</li>
+                <li><strong>Host 模式 (透明转发):</strong> 专为需要保留 Host 头等信息的应用设计。它会剥离代理路径，将剩余路径完整转发到目标域名（当然也可以像我一样用来来缩短域名）。</li>
             </ul>
             <p>
                 <strong>注意：</strong> 此页面仅为服务入口和规则说明。完整项目和部署细节请访问 
