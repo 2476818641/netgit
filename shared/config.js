@@ -45,7 +45,7 @@ export const proxyRules = {
   },
   '/gemini/': {
     type: 'path',
-    target: 'https://files.catbox.moe',
+    target: 'https://generativelanguage.googleapis.com',
     description: 'gemini api',
     examplePath: 'v1' 
   '/ssh/': {
