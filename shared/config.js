@@ -47,7 +47,7 @@ export const proxyRules = {
     type: 'path',
     target: 'https://generativelanguage.googleapis.com',
     description: 'gemini api',
-    examplePath: 'v1' 
+    examplePath: 'v1/' 
   '/ssh/': {
     type: 'host',
     target: 'subsequent-ardelle-bbttca23-472bd3ef.koyeb.app', // 目标域名，无需协议
