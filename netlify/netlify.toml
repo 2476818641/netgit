@@ -1,11 +1,32 @@
 # netlify/netlify.toml
-[build]
-  command = "npm install && npm run build" # Netlify CLI 通常会自动进入 Base directory
-  publish = "build"
-  functions = "functions"
-  
-# Base directory 在 Netlify UI 中设置，或者在这里指定
-# [build.environment]
-#   BASE_DIR = "netlify"
 
-# 不再需要 redirects 规则
+# [build] 部分告诉 Netlify 如何构建你的站点
+[build]
+  # command: 构建命令。Netlify 会先进入"Base directory"，然后执行这个命令。
+  command = "npm install && npm run build"
+  
+  # publish: 构建完成后，要部署的静态文件目录。
+  # 它的路径相对于 "Base directory"。
+  publish = "build" 
+  
+  # functions: Netlify Functions 的存放目录。
+  # 它的路径也相对于 "Base directory"。
+  functions = "functions"
+
+# [[redirects]] 部分是路由规则，这是让代理工作的核心
+[[redirects]]
+  # from: 匹配所有路径的请求
+  from = "/*"
+  # to: 将请求转发给名为 'proxy' 的 Netlify Function
+  to = "/.netlify/functions/proxy"
+  # status: 200 表示这是一个“重写”，URL 不变，但内容由函数提供
+  status = 200
+  # force: 即使路径下存在静态文件（比如 /index.html），也强制执行此规则
+  # 这对于确保根路径也被函数处理非常重要，但我们希望首页能显示，所以先注释掉
+  # force = true 
+
+# 为首页设置一个特例，防止它被函数捕获
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
