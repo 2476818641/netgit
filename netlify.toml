@@ -1,0 +1,25 @@
+# C:/.../catbox/netlify.toml (这是新的文件位置和内容)
+
+[build]
+  # Base directory: 我们告诉 Netlify，所有构建相关的操作都在这个子目录进行
+  base = "netlify"
+  
+  # Build command: 这个命令会在 `base` 目录内执行
+  command = "npm install && npm run build"
+  
+  # Publish directory: 构建结果的目录，相对于 `base` 目录
+  publish = "build"
+  
+  # Functions directory: 函数目录，相对于 `base` 目录
+  functions = "functions"
+
+# 重定向规则保持不变，因为它们作用于整个站点
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/proxy"
+  status = 200
