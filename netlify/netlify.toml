@@ -1,11 +1,13 @@
 # netlify/netlify.toml
+
 [build]
-  command = "npm install && npm run build" # Netlify CLI 通常会自动进入 Base directory
+  command = "npm install && npm run build"
   publish = "build"
   functions = "functions"
-  
-# Base directory 在 Netlify UI 中设置，或者在这里指定
-# [build.environment]
-#   BASE_DIR = "netlify"
 
-# 不再需要 redirects 规则
+# [[redirects]] 是 Netlify 用来配置路由规则的部分
+# 这个规则告诉 Netlify，将所有请求都重写到我们的 proxy function
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/proxy"
+  status = 200 # 200 表示这是一个“重写”(rewrite)，而不是一个“重定向”(redirect)
