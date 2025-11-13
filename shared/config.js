@@ -10,7 +10,7 @@ export const GITHUB_USERNAME = "2476818641"; // 务必替换
  * 你的 Netlify 部署后获得的域名。
  * 如果你未部署到 Netlify，请留空。
  */
-export const NETLIFY_HOME_DOMAIN = ""; 
+export const NETLIFY_HOME_DOMAIN = "plp.liudds.eu.org"; 
 
 /**
  * 你的 Cloudflare Pages 部署后获得的域名。
