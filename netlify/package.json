@@ -1,3 +1,4 @@
+// netlify/package.json
 {
   "name": "netlify-proxy-frontend",
   "version": "1.0.0",
