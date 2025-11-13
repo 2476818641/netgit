@@ -15,11 +15,24 @@ export async function handleRequest(request) {
                 const subpath = path.substring(prefix.length);
                 targetUrlStr = `${rule.target}/${subpath}${url.search}`;
             } else if (rule.type === 'url') {
+                // 从路径中提取目标 URL
                 targetUrlStr = path.substring(prefix.length);
+                
+                // ==================== 核心修改部分 开始 ====================
+                // 检查提取出的 URL 字符串是否包含协议头 (http:// 或 https://)
+                // 这样做是为了让用户在输入时可以省略协议头，提高容错性。
+                if (!targetUrlStr.startsWith('http://') && !targetUrlStr.startsWith('https://')) {
+                    // 如果没有协议头，默认添加 https://
+                    targetUrlStr = 'https://' + targetUrlStr;
+                }
+                // ==================== 核心修改部分 结束 ====================
+
                 if (url.search) {
                     targetUrlStr += url.search;
                 }
+                
                 try {
+                    // 现在 targetUrlStr 是一个完整的 URL，可以安全地被 new URL() 解析
                     let targetDomain = new URL(targetUrlStr).hostname;
                     if (!rule.allowedDomains.some(domain => targetDomain === domain || targetDomain.endsWith('.' + domain))) {
                         return { 
@@ -29,6 +42,7 @@ export async function handleRequest(request) {
                         };
                     }
                 } catch (e) {
+                    // 如果 new URL() 仍然失败（例如 URL 格式完全错误），则返回之前的错误
                     return { 
                         status: 'error', 
                         message: 'Bad Request: Invalid target URL.', 
