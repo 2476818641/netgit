@@ -43,12 +43,6 @@ export const proxyRules = {
     description: 'Catbox.moe 文件代理',
     examplePath: 'yqh1it.png' 
   },
-  '/gemini/': {
-    type: 'path',
-    target: 'https://generativelanguage.googleapis.com',
-    description: 'gemini api',
-    examplePath: 'v1/' 
-  },
   '/ssh/': {
     type: 'host',
     target: 'subsequent-ardelle-bbttca23-472bd3ef.koyeb.app', // 目标域名，无需协议
