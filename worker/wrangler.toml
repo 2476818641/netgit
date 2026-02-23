@@ -1,0 +1,10 @@
+# worker/wrangler.toml
+name = "netgit-worker" # 你的 Worker 名称，可以自定义
+main = "src/proxy-worker.js" 
+compatibility_date = "2023-11-20" # 建议使用最新的兼容性日期，具体请查阅 Cloudflare Workers 文档
+
+# 以下配置通常在 `wrangler publish` 或 Cloudflare UI 中进行
+# account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID" 
+# routes = [
+#   { pattern = "cf.liudds.eu.org/*", zone_id = "YOUR_ZONE_ID" } 
+# ]

@@ -1,0 +1,11 @@
+# netlify/netlify.toml
+[build]
+  command = "npm install && npm run build" # Netlify CLI 通常会自动进入 Base directory
+  publish = "build"
+  functions = "functions"
+  
+# Base directory 在 Netlify UI 中设置，或者在这里指定
+# [build.environment]
+#   BASE_DIR = "netlify"
+
+# 不再需要 redirects 规则
