@@ -16,7 +16,7 @@ export const NETLIFY_HOME_DOMAIN = "";
  * 你的 Cloudflare Pages 部署后获得的域名。
  * 如果你未部署到 Cloudflare Pages，请留空。
  */
-export const CF_PAGES_HOME_DOMAIN = "cf.liuass.eu.org"; 
+export const CF_PAGES_HOME_DOMAIN = "https://cf.liuass.eu.org"; 
 
 /**
  * 定义代理服务的规则。
