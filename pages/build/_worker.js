@@ -1,13 +1,15 @@
 // worker/src/proxy-worker.js
 
 import { proxyWithCache } from '../../shared/proxy-handler.js';
+import { proxyRules } from '../../shared/config.js';
 
 export default {
     async fetch(request, env, ctx) {
         const cache = caches.default;
         const url = new URL(request.url);
-        
-        if (url.pathname === '/' || !url.pathname.match(/^(\/[a-z]+proxy)\//)) {
+
+        const isProxyPath = Object.keys(proxyRules).some(prefix => url.pathname.startsWith(prefix));
+        if (url.pathname === '/' || !isProxyPath) {
             try {
                 return await env.ASSETS.fetch(request);
             } catch (e) {
