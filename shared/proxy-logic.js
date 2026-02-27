@@ -19,6 +19,10 @@ export async function handleRequest(request) {
                 if (url.search) {
                     targetUrlStr += url.search;
                 }
+                // Allow scheme-less URLs like github.com/owner/repo
+                if (!/^https?:\/\//i.test(targetUrlStr)) {
+                    targetUrlStr = `https://${targetUrlStr}`;
+                }
                 try {
                     let targetDomain = new URL(targetUrlStr).hostname;
                     if (!rule.allowedDomains.some(domain => targetDomain === domain || targetDomain.endsWith('.' + domain))) {
