@@ -1,14 +1,15 @@
-# NetGit - 双平台通用代理服务 🚀
+# NetGit - 多平台通用代理服务 🚀
 
 [![一键部署到 Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/2476818641/netgit)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/2476818641/netgit&root-directory=vercel)
 
-**NetGit** 是一个基于 Cloudflare Pages 和 Netlify Functions 的双平台通用代理服务。它旨在提供灵活、快速的代理能力，并最大程度地简化部署流程，让您能轻松拥有自己的专属代理。
+**NetGit** 是一个基于 Cloudflare Pages、Netlify Functions 和 Vercel Serverless Functions 的多平台通用代理服务。它旨在提供灵活、快速的代理能力，并最大程度地简化部署流程，让您能轻松拥有自己的专属代理。
 
----
+
 
 ## ✨ 主要特性
 
-*   **⚡ 双平台部署:** 同时支持 Cloudflare Pages 和 Netlify，您可以根据自己的偏好和网络环境自由选择。
+*   **⚡ 多平台部署:** 同时支持 Cloudflare Pages、Netlify 和 Vercel，您可以根据自己的偏好和网络环境自由选择。
 *   **💨 可靠部署:** 提供清晰的手动部署指南，确保在复杂的项目结构下也能 100% 成功部署。
 *   **🔧 配置中心化:** 所有关键配置（如代理白名单、域名等）都集中在 `shared/config.js` 文件中，方便统一管理和维护。
 *   **🎯 多功能代理:**
@@ -35,7 +36,7 @@
     // shared/config.js
     export const GITHUB_USERNAME = "你的GitHub用户名"; // 务必替换这里
     ```
-    > **注意：** `NETLIFY_HOME_DOMAIN` 和 `CF_PAGES_HOME_DOMAIN` 这两个变量请暂时留空，等待部署成功获得域名后再回来修改。
+    > **注意：** `NETLIFY_HOME_DOMAIN`、`CF_PAGES_HOME_DOMAIN` 和 `VERCEL_HOME_DOMAIN` 这三个变量请暂时留空，等待部署成功获得域名后再回来修改。
 
 ### 步骤 2：选择平台并部署
 
@@ -66,18 +67,29 @@
     *   **Publish directory:** `build`
 3.  点击 **"Deploy site"**。部署成功后，您会得到一个 `.netlify.app` 的域名。
 
+#### C. 部署到 Vercel (推荐备选)
+
+1.  访问 Vercel：<https://vercel.com/new/clone?repository-url=https://github.com/2476818641/netgit&root-directory=vercel>
+2.  导入后请确认以下关键设置：
+    *   **Framework Preset:** `Other`
+    *   **Root Directory:** `vercel`
+    *   **Build Command:** `npm install && npm run build`
+    *   **Output Directory:** `build`
+3.  点击部署。部署成功后，您会得到一个 `.vercel.app` 域名。
+
 ### 步骤 3：更新最终域名 (⚠️ 关键)
 
 这是确保主页链接和功能正常工作的**最后一步**，请勿跳过！
 
 1.  回到您 Fork 的 GitHub 仓库，再次打开 `shared/config.js` 文件。
-2.  将 `CF_PAGES_HOME_DOMAIN` 和 `NETLIFY_HOME_DOMAIN` 的值更新为您刚刚获得的**完整域名**（如果只部署了一个平台，另一个留空即可）。
+2.  将 `CF_PAGES_HOME_DOMAIN`、`NETLIFY_HOME_DOMAIN` 和 `VERCEL_HOME_DOMAIN` 的值更新为您刚刚获得的**完整域名**（如果只部署了一个平台，其他留空即可）。
 
     ```javascript
     // shared/config.js
     export const GITHUB_USERNAME = "你的GitHub用户名"; // 这个应该已经修改过了
     export const CF_PAGES_HOME_DOMAIN = "https://my-netgit.pages.dev"; // 替换为你的 Cloudflare 域名
     export const NETLIFY_HOME_DOMAIN = "https://my-netlify-site.netlify.app"; // 替换为你的 Netlify 域名
+    export const VERCEL_HOME_DOMAIN = "https://my-netgit.vercel.app"; // 替换为你的 Vercel 域名
     ```
 3.  提交并推送这次修改。平台会自动触发一次新的部署，部署完成后，您的主页和所有功能将完全正常。
 
@@ -85,7 +97,7 @@
 
 ## ✅ 如何使用
 
-部署完成后，将 `<你的域名>` 替换为您的 Cloudflare 或 Netlify 服务的实际域名即可使用。
+部署完成后，将 `<你的域名>` 替换为您的 Cloudflare、Netlify 或 Vercel 服务的实际域名即可使用。
 
 *   **GitHub 代理:** `<你的域名>/ghproxy/https://github.com/owner/repo/archive/main.zip`
 *   **Docker 代理:** `<你的域名>/dockerproxy/镜像地址`
@@ -97,6 +109,7 @@
 .
 ├── netlify/                   # Netlify 平台相关代码
 ├── pages/                     # Cloudflare Pages 平台相关代码
+├── vercel/                    # Vercel 平台相关代码
 ├── shared/                    # 共享配置 (核心)
 └── worker/                    # (参考) 独立 Worker 逻辑
 ```
