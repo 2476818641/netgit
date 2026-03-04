@@ -5,14 +5,7 @@
 
 **NetGit** 是一个基于 Cloudflare Pages、Netlify Functions 和 Vercel Serverless Functions 的多平台通用代理服务。它旨在提供灵活、快速的代理能力，并最大程度地简化部署流程，让您能轻松拥有自己的专属代理。
 
-## ⚡ 快速部署链接
 
-* Netlify 一键部署（推荐直接分享给他人）：  
-  https://app.netlify.com/start/deploy?repository=https://github.com/2476818641/netgit
-* Vercel 一键导入：  
-  https://vercel.com/new/clone?repository-url=https://github.com/2476818641/netgit&root-directory=vercel
-
----
 
 ## ✨ 主要特性
 
