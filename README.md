@@ -74,7 +74,7 @@
     *   **Framework Preset:** `Other`
     *   **Root Directory:** `vercel`
     *   **Build Command:** `npm install && npm run build`
-    *   **Output Directory:** `build`
+    *   **Output Directory:** 留空（不要填写）
 3.  点击部署。部署成功后，您会得到一个 `.vercel.app` 域名。
 
 ### 步骤 3：更新最终域名 (⚠️ 关键)

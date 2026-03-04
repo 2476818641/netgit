@@ -17,10 +17,6 @@
     {
       "source": "/ssh/:path*",
       "destination": "/api/proxy/ssh/:path*"
-    },
-    {
-      "source": "/",
-      "destination": "/build/index.html"
     }
   ],
   "functions": {
