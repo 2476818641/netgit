@@ -22,7 +22,7 @@ export const CF_PAGES_HOME_DOMAIN = "https://cf.liuass.eu.org";
  * 你的 Vercel 部署后获得的域名。
  * 如果你未部署到 Vercel，请留空。
  */
-export const VERCEL_HOME_DOMAIN = "https://vt.liuasd.de5.net";
+export const VERCEL_HOME_DOMAIN = "https://liudds.de5.net";
 
 /**
  * 定义代理服务的规则。
