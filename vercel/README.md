@@ -9,7 +9,7 @@ Use these settings in the Vercel dashboard:
 - Framework Preset: `Other`
 - Root Directory: `vercel`
 - Build Command: `npm install && npm run build`
-- Output Directory: `build`
+- Output Directory: *(leave empty)*
 - Install Command: `npm install`
 
 ## 2) Deploy
