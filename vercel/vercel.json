@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "buildCommand": "npm install && npm run build",
+  "rewrites": [
+    {
+      "source": "/ghproxy/:path*",
+      "destination": "/api/proxy/ghproxy/:path*"
+    },
+    {
+      "source": "/dockerproxy/:path*",
+      "destination": "/api/proxy/dockerproxy/:path*"
+    },
+    {
+      "source": "/catbox/:path*",
+      "destination": "/api/proxy/catbox/:path*"
+    },
+    {
+      "source": "/ssh/:path*",
+      "destination": "/api/proxy/ssh/:path*"
+    },
+    {
+      "source": "/",
+      "destination": "/build/index.html"
+    }
+  ],
+  "functions": {
+    "api/proxy/[...path].js": {
+      "maxDuration": 60
+    }
+  }
+}
