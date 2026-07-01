@@ -1,132 +1,291 @@
-# NetGit - 多平台通用代理服务 🚀
+# NetGit - 开源双平台代理服务
 
-[![一键部署到 Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/2476818641/netgit)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/2476818641/netgit&root-directory=vercel)
+🚀 功能全面的代理服务，支持 GitHub、Docker Hub、NPM、PyPI 等多种资源访问，集成健康检查和历史数据统计。
 
-**NetGit** 是一个基于 Cloudflare Pages、Netlify Functions 和 Vercel Serverless Functions 的多平台通用代理服务。它旨在提供灵活、快速的代理能力，并最大程度地简化部署流程，让您能轻松拥有自己的专属代理。
+[![部署状态](https://img.shields.io/badge/部署-Cloudflare%20Pages-orange)](https://cf.liuass.eu.org)
+[![版本](https://img.shields.io/badge/版本-v1.2.0-blue)](https://github.com/2476818641/netgit)
 
+## ✨ 核心功能
 
+### 📦 代理服务（16个规则）
 
-## ✨ 主要特性
+**代码托管平台**
+- `/ghproxy/` - GitHub 资源代理
+- `/gitlab/` - GitLab 资源代理
+- `/` - 通用 URL 代理（支持多域名白名单）
 
-*   **⚡ 多平台部署:** 同时支持 Cloudflare Pages、Netlify 和 Vercel，您可以根据自己的偏好和网络环境自由选择。
-*   **💨 可靠部署:** 提供清晰的手动部署指南，确保在复杂的项目结构下也能 100% 成功部署。
-*   **🔧 配置中心化:** 所有关键配置（如代理白名单、域名等）都集中在 `shared/config.js` 文件中，方便统一管理和维护。
-*   **🎯 多功能代理:**
-    *   **GitHub & Docker:** 解决部分网络环境下访问 GitHub (raw, release) 和 Docker (registry) 资源缓慢或失败的问题。
-    *   **Catbox.moe:** 安全、匿名地反向代理 `catbox.moe` 上的内容。
+**容器镜像仓库**
+- `/dockerproxy/` - Docker Hub
+- `/gcr/` - Google Container Registry
+- `/quay/` - Quay.io
+- `/ghcr/` - GitHub Container Registry
 
----
+**包管理器**
+- `/npm/` - NPM 包注册表
+- `/pypi/` - PyPI Python 包
+- `/maven/` - Maven Central 仓库
 
-## 🛠️ 部署指南
+**CDN 资源**
+- `/jsdelivr/` - jsDelivr CDN
+- `/unpkg/` - Unpkg CDN
 
-整个部署过程分为三个核心步骤，请务必按顺序操作。
+**文件托管**
+- `/imgur/` - Imgur 图片
+- `/catbox/` - Catbox.moe 文件
 
-### 步骤 1：准备工作 (Fork & 修改初始配置)
+**其他**
+- `/ssh/` - SSH 透明代理（Host 模式）
 
-这是所有后续部署的基础，请务必完成。
+### 🏥 健康检查系统
 
-1.  **Fork 本仓库**
-    点击此页面右上角的 **"Fork"** 按钮，将此项目完整地复制到您自己的 GitHub 账户下。
+**双格式输出**
+- `/health` - 美观的 HTML 页面，实时状态展示
+- `/health/json` - 纯 JSON 格式，适合脚本监控
 
-2.  **修改 `shared/config.js`**
-    在您 Fork 后的仓库中，找到并编辑 `shared/config.js` 文件，将 `GITHUB_USERNAME` 的值修改为您自己的 GitHub 用户名。
+**实时监控（8个目标）**
+- GitHub API & Raw CDN
+- GitLab
+- Docker Hub Registry
+- NPM Registry
+- PyPI
+- jsDelivr CDN
+- Unpkg CDN
 
-    ```javascript
-    // shared/config.js
-    export const GITHUB_USERNAME = "你的GitHub用户名"; // 务必替换这里
-    ```
-    > **注意：** `NETLIFY_HOME_DOMAIN`、`CF_PAGES_HOME_DOMAIN` 和 `VERCEL_HOME_DOMAIN` 这三个变量请暂时留空，等待部署成功获得域名后再回来修改。
+**30天历史统计**
+- 平均延迟计算
+- 服务可用率统计
+- 自动数据汇总
+- KV 存储支持（30天 TTL）
 
-### 步骤 2：选择平台并部署
+**定时检查**
+- 每 30 分钟自动执行
+- Workers Cron Triggers
+- 自动保存到 KV
 
-我们推荐使用 Cloudflare Pages，因为它性能更优且功能更全。
+## 🚀 快速开始
 
-#### A. 部署到 Cloudflare Pages (推荐)
+### 使用示例
 
-由于本项目结构特殊，需要通过 Cloudflare 控制台手动设置才能确保成功。
+```bash
+# GitHub 文件代理
+curl https://cf.liuass.eu.org/raw.githubusercontent.com/torvalds/linux/master/README
 
-1.  登录 Cloudflare 仪表板，进入 **Workers & Pages**。
-2.  点击 **"创建应用程序"** -> **"Pages"** -> **"连接到 Git"**。
-3.  选择您刚刚 Fork 的 `netgit` 仓库。
-4.  在 **“设置构建和部署”** 页面，**请精确填写**以下信息：
-    *   **项目名称:** 任意填写 (例如 `my-netgit`)
-    *   **生产分支:** `main`
-    *   **框架预设:** `None`
-    *   **构建命令:** `npm install && npm run build`
-    *   **构建输出目录:** `build`
-    *   **根目录 (Root directory):** `/pages`  **<-- ⚠️ 这是最关键的一步！**
-5.  点击 **“保存并部署”**。部署成功后，您会得到一个 `.pages.dev` 域名。
+# NPM 包查询
+curl https://cf.liuass.eu.org/npm/vue
 
-#### B. 部署到 Netlify (备选方案)
+# Docker Hub 镜像
+docker pull cf.liuass.eu.org/dockerproxy/library/nginx:latest
 
-1.  点击本页面顶部的 **"Deploy to Netlify"** 蓝色按钮。
-2.  登录并授权后，Netlify 会自动识别配置。**请检查并确认**以下信息是否正确：
-    *   **Base directory:** `netlify`
-    *   **Build command:** `npm install && npm run build`
-    *   **Publish directory:** `build`
-3.  点击 **"Deploy site"**。部署成功后，您会得到一个 `.netlify.app` 的域名。
+# jsDelivr CDN
+curl https://cf.liuass.eu.org/jsdelivr/npm/vue@3/dist/vue.global.js
 
-#### C. 部署到 Vercel (推荐备选)
-
-1.  访问 Vercel：<https://vercel.com/new/clone?repository-url=https://github.com/2476818641/netgit&root-directory=vercel>
-2.  导入后请确认以下关键设置：
-    *   **Framework Preset:** `Other`
-    *   **Root Directory:** `vercel`
-    *   **Build Command:** `npm install && npm run build`
-    *   **Output Directory:** 留空（不要填写）
-3.  点击部署。部署成功后，您会得到一个 `.vercel.app` 域名。
-
-### 步骤 3：更新最终域名 (⚠️ 关键)
-
-这是确保主页链接和功能正常工作的**最后一步**，请勿跳过！
-
-1.  回到您 Fork 的 GitHub 仓库，再次打开 `shared/config.js` 文件。
-2.  将 `CF_PAGES_HOME_DOMAIN`、`NETLIFY_HOME_DOMAIN` 和 `VERCEL_HOME_DOMAIN` 的值更新为您刚刚获得的**完整域名**（如果只部署了一个平台，其他留空即可）。
-
-    ```javascript
-    // shared/config.js
-    export const GITHUB_USERNAME = "你的GitHub用户名"; // 这个应该已经修改过了
-    export const CF_PAGES_HOME_DOMAIN = "https://my-netgit.pages.dev"; // 替换为你的 Cloudflare 域名
-    export const NETLIFY_HOME_DOMAIN = "https://my-netlify-site.netlify.app"; // 替换为你的 Netlify 域名
-    export const VERCEL_HOME_DOMAIN = "https://my-netgit.vercel.app"; // 替换为你的 Vercel 域名
-    ```
-3.  提交并推送这次修改。平台会自动触发一次新的部署，部署完成后，您的主页和所有功能将完全正常。
-
----
-
-## ✅ 如何使用
-
-部署完成后，将 `<你的域名>` 替换为您的 Cloudflare、Netlify 或 Vercel 服务的实际域名即可使用。
-
-*   **GitHub 代理:** `<你的域名>/ghproxy/https://github.com/owner/repo/archive/main.zip`
-*   **Docker 代理:** `<你的域名>/dockerproxy/镜像地址`
-*   **Catbox 代理:** `<你的域名>/catbox/some_file.jpg`
-
----
-## 📂 项目结构
-```text
-.
-├── netlify/                   # Netlify 平台相关代码
-├── pages/                     # Cloudflare Pages 平台相关代码
-├── vercel/                    # Vercel 平台相关代码
-├── shared/                    # 共享配置 (核心)
-└── worker/                    # (参考) 独立 Worker 逻辑
+# 健康检查
+curl https://cf.liuass.eu.org/health/json
 ```
----
 
-## 💡 常见问题
+## 📊 部署架构
 
-*   **Cloudflare 代理不工作怎么办？**
-    请仔细检查并确保 **步骤 2A** 中的构建设置完全正确，尤其是 **根目录** 必须是 `/pages`。任何一项错误都可能导致部署失败。
+### 支持的平台
 
-*   **如何更新代理规则或白名单？**
-    直接修改 `shared/config.js` 文件，然后提交并推送到您的 GitHub `main` 分支即可。平台会自动重新部署。
+- ✅ **Cloudflare Pages** - 主推荐（支持 KV + Cron）
+- ✅ **Netlify** - 备选方案
+- ✅ **Vercel** - 备选方案
+
+### Cloudflare Pages 部署
+
+#### 1. 创建 KV 命名空间
+
+```bash
+# 在 Cloudflare Dashboard 中创建 KV 命名空间
+# Workers & Pages > KV > Create a namespace
+# 命名为：netgit-health-data
+```
+
+#### 2. 配置环境变量
+
+在 Cloudflare Pages 设置中：
+- 变量名：`KV`
+- 值：选择你创建的 KV 命名空间
+
+#### 3. 配置 Cron Triggers
+
+在 `wrangler.toml` 中已配置：
+```toml
+[triggers]
+crons = ["*/30 * * * *"]  # 每30分钟执行
+```
+
+部署后会自动启用定时任务。
+
+#### 4. 推送部署
+
+```bash
+git push origin main
+```
+
+Cloudflare Pages 会自动构建和部署。
+
+## 🛠️ 本地开发
+
+### 环境要求
+
+- Node.js 16+
+- Git
+
+### 安装依赖
+
+```bash
+# 主项目（可选）
+npm install
+
+# Cloudflare Pages
+cd pages && npm install
+
+# Netlify
+cd netlify && npm install
+
+# Vercel
+cd vercel && npm install
+```
+
+### 本地测试
+
+```bash
+# 构建所有平台
+cd pages && npm run build
+cd ../netlify && npm run build
+cd ../vercel && npm run build
+
+# 使用 Wrangler 本地测试（Cloudflare）
+npx wrangler pages dev pages/build --kv KV
+```
+
+## 📖 配置说明
+
+### 修改代理规则
+
+编辑 `shared/config.js`：
+
+```javascript
+export const proxyRules = {
+  '/your-path/': {
+    type: 'path',  // 'path' | 'url' | 'host' | 'health'
+    target: 'https://your-target.com',
+    description: '你的代理描述',
+    examplePath: 'api/data'
+  }
+};
+```
+
+### 添加健康检查目标
+
+编辑 `shared/health-checker.js`：
+
+```javascript
+export const healthCheckTargets = [
+  { 
+    name: 'Your Service', 
+    url: 'https://your-service.com/api', 
+    type: 'api' // 'api' | 'cdn' | 'registry'
+  }
+];
+```
+
+### 调整定时频率
+
+编辑 `wrangler.toml`：
+
+```toml
+[triggers]
+crons = ["0 * * * *"]  # 改为每小时
+```
+
+## 📈 性能优化
+
+- ✅ Cloudflare CDN 缓存
+- ✅ Workers KV 高速存储
+- ✅ 智能路径匹配（长路径优先）
+- ✅ 响应头优化
+- ✅ 30 天数据自动过期
+
+## 🎨 UI 特性
+
+- ✅ 深色/浅色模式切换
+- ✅ 一键复制示例
+- ✅ 响应式设计
+- ✅ 彩色状态标签
+- ✅ 实时延迟显示
+- ✅ 30天趋势对比
+
+## 📝 API 响应格式
+
+### `/health/json` 响应示例
+
+```json
+{
+  "status": "healthy",
+  "timestamp": "2026-07-01T06:00:00.000Z",
+  "version": "1.2.0",
+  "checks": {
+    "targets": [
+      {
+        "name": "GitHub",
+        "type": "api",
+        "latency": 136,
+        "status": "healthy",
+        "statusCode": 200,
+        "available": true
+      }
+    ],
+    "summary": {
+      "total": 8,
+      "healthy": 7,
+      "degraded": 1,
+      "unhealthy": 0
+    }
+  },
+  "stats30d": {
+    "period": "30d",
+    "summary": {
+      "totalChecks": 1440,
+      "daysWithData": 30
+    },
+    "targets": {
+      "GitHub": {
+        "avgLatency": 145,
+        "availability": "99.85",
+        "healthyCount": 1430,
+        "degradedCount": 8,
+        "unhealthyCount": 2
+      }
+    }
+  }
+}
+```
+
+## 🔒 安全性
+
+- ✅ 域名白名单验证
+- ✅ 请求头过滤
+- ✅ 超时保护（5秒）
+- ✅ 错误处理机制
+- ✅ 无敏感信息暴露
 
 ## 🤝 贡献
 
-欢迎任何形式的贡献！如果您有改进意见、发现 bug 或希望添加新功能，请随时提交 [Issue](https://github.com/2476818641/netgit/issues) 或 [Pull Request](https://github.com/2476818641/netgit/pulls)。
+欢迎提交 Issue 和 Pull Request！
 
-## 📜 许可证
+## 📄 许可证
 
-本项目基于 [MIT](LICENSE) 许可证发布。
+MIT License
+
+## 🔗 相关链接
+
+- [GitHub 仓库](https://github.com/2476818641/netgit)
+- [Cloudflare Pages 文档](https://developers.cloudflare.com/pages/)
+- [Workers KV 文档](https://developers.cloudflare.com/kv/)
+- [Cron Triggers 文档](https://developers.cloudflare.com/workers/configuration/cron-triggers/)
+
+---
+
+⭐ 如果这个项目对你有帮助，请给一个 Star！
