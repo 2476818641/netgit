@@ -166,28 +166,50 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
     }
 
     let modeDescription = '';
+    let modeBadgeClass = '';
     switch(rule.type) {
-        case 'path': modeDescription = '路径映射'; break;
-        case 'url': modeDescription = 'URL 参数'; break;
-        case 'host': modeDescription = 'Host 模式 (透明转发)'; break;
-        default: modeDescription = '未知';
+        case 'path':
+          modeDescription = '路径映射';
+          modeBadgeClass = 'badge-path';
+          break;
+        case 'url':
+          modeDescription = 'URL 参数';
+          modeBadgeClass = 'badge-url';
+          break;
+        case 'host':
+          modeDescription = 'Host 模式';
+          modeBadgeClass = 'badge-host';
+          break;
+        default:
+          modeDescription = '未知';
+          modeBadgeClass = 'badge-default';
     }
 
     const examplePathSegment = rule.type === 'url'
       ? rule.examplePath.replace(/^https?:\/\//, '')
       : rule.examplePath;
 
-    const safeExamplePath = examplePathSegment || 'example'; 
+    const safeExamplePath = examplePathSegment || 'example';
     const fullExample = `${currentHomeDomain}${prefix}${safeExamplePath}`;
-    
+
     proxyListHtml += `
       <div class="rule-card">
-        <h3>${rule.description}</h3>
+        <div class="rule-header">
+          <h3>${rule.description}</h3>
+          <span class="badge ${modeBadgeClass}">${modeDescription}</span>
+        </div>
         <ul>
           <li><strong>代理路径:</strong> <code>${prefix}</code></li>
-          <li><strong>代理模式:</strong> <code>${modeDescription}</code></li>
           ${rule.target ? `<li><strong>目标源站:</strong> <code>${rule.target}</code></li>` : ''}
-          <li><strong>使用示例:</strong> <pre><code>${fullExample}</code></pre></li>
+          <li>
+            <strong>使用示例:</strong>
+            <div class="example-container">
+              <pre><code id="example-${prefix.replace(/\//g, '-')}">${fullExample}</code></pre>
+              <button class="copy-btn" onclick="copyToClipboard('example-${prefix.replace(/\//g, '-')}', this)" title="复制示例">
+                📋
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
     `;
@@ -300,31 +322,121 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
             margin-top: 2rem; 
             margin-bottom: 1rem; 
         }
-        h3 { 
-            color: var(--link-color); 
-            font-size: 1.2rem; 
-            margin-top: 1.5rem; 
+        h3 {
+            color: var(--link-color);
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
         }
-        .rule-card { 
-            border: 1px solid var(--card-border-color); 
-            padding: 0 1.5rem 1.5rem; 
-            border-radius: 8px; 
+        .rule-card {
+            border: 1px solid var(--card-border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
             margin-bottom: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        code { 
-            background-color: var(--code-bg-color); 
-            padding: 0.3em 0.5em; 
-            border-radius: 4px; 
-            font-family: 'SF Mono', 'Menlo', 'Consolas', monospace; 
-            font-size: 0.9em; 
+        .rule-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow-color);
         }
-        pre { 
-            background-color: var(--pre-bg-color); 
-            color: var(--pre-text-color); 
-            padding: 1em 1.5em; 
-            border-radius: 8px; 
-            overflow-x: auto; 
-            font-size: 0.9em; 
+        .rule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .badge-path {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        .badge-url {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+        .badge-host {
+            background-color: #e8f5e9;
+            color: #388e3c;
+        }
+        html[data-theme="dark"] .badge-path {
+            background-color: #1565c0;
+            color: #bbdefb;
+        }
+        html[data-theme="dark"] .badge-url {
+            background-color: #6a1b9a;
+            color: #e1bee7;
+        }
+        html[data-theme="dark"] .badge-host {
+            background-color: #2e7d32;
+            color: #c8e6c9;
+        }
+        .example-container {
+            position: relative;
+            margin-top: 0.5rem;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--code-bg-color);
+            border: 1px solid var(--card-border-color);
+            border-radius: 4px;
+            padding: 0.4rem 0.6rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            opacity: 0.7;
+        }
+        .copy-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            background: var(--link-color);
+        }
+        .copy-btn.copied {
+            background: #4caf50;
+        }
+        .copy-btn.copied::after {
+            content: '✓';
+            position: absolute;
+            top: -1.5rem;
+            right: 0;
+            background: #4caf50;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+        code {
+            background-color: var(--code-bg-color);
+            padding: 0.3em 0.5em;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+            font-size: 0.9em;
+            word-break: break-all;
+        }
+        pre {
+            background-color: var(--pre-bg-color);
+            color: var(--pre-text-color);
+            padding: 1em 3em 1em 1.5em;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.85em;
+            margin: 0;
+            position: relative;
+        }
+        pre code {
+            background: none;
+            padding: 0;
         }
         ul { 
             list-style-type: none; 
@@ -373,27 +485,86 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
             font-size: 1.2rem;
             transition: background-color 0.3s, transform 0.3s;
         }
-        #theme-toggle:hover { 
-            transform: scale(1.1); 
+        #theme-toggle:hover {
+            transform: scale(1.1);
         }
-        #theme-toggle::after { 
-            content: var(--toggle-icon); 
+        #theme-toggle::after {
+            content: var(--toggle-icon);
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--code-bg-color);
+            border-radius: 8px;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--link-color);
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            .container {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .rule-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .stats {
+                padding: 1rem;
+            }
+            .stat-number {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
     <button id="theme-toggle" title="切换深色/浅色模式"></button>
-    
+
     <div class="container">
-        <h1>欢迎访问 ${projectName} 代理服务</h1> 
-        
+        <h1>欢迎访问 ${projectName} 代理服务</h1>
+
         <p>
-            这是一个由 <strong>${platformName || 'Cloudflare Pages/Netlify'}</strong> 托管的 ${projectName} 服务入口 (${currentHomeDomain.replace('https://', '')})。 
-            本服务旨在提供灵活、快速的代理能力，帮助您轻松访问 GitHub、Docker Hub 等资源。
+            这是一个由 <strong>${platformName || 'Cloudflare Pages/Netlify'}</strong> 托管的 ${projectName} 服务入口 (${currentHomeDomain.replace('https://', '')})。
+            本服务旨在提供灵活、快速的代理能力，帮助您轻松访问 GitHub、Docker Hub、NPM、PyPI 等资源。
         </p>
-        
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">${Object.keys(proxyRules).length - 1}</div>
+                <div class="stat-label">代理规则</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">✓</div>
+                <div class="stat-label">健康状态</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">在线服务</div>
+            </div>
+        </div>
+
         <h2>🚀 ${projectName} 代理规则列表</h2>
-        <p>以下是该服务当前支持的代理规则，您可以方便地使用它们来访问特定的网络资源。</p>
+        <p>以下是该服务当前支持的代理规则，点击 📋 按钮可快速复制使用示例。</p>
         
         ${proxyListHtml}
         
@@ -418,6 +589,7 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
     </div>
 
     <script>
+      // 主题切换功能
       (function() {
         const themeToggle = document.getElementById('theme-toggle');
         const html = document.documentElement;
@@ -442,6 +614,49 @@ export const generateStaticHomePage = (platformName, currentHomeDomain) => {
           applyTheme('dark');
         }
       })();
+
+      // 复制到剪贴板功能
+      function copyToClipboard(elementId, button) {
+        const element = document.getElementById(elementId);
+        const text = element.textContent;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            showCopySuccess(button);
+          }).catch(err => {
+            fallbackCopy(text, button);
+          });
+        } else {
+          fallbackCopy(text, button);
+        }
+      }
+
+      // 降级复制方法
+      function fallbackCopy(text, button) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand('copy');
+          showCopySuccess(button);
+        } catch (err) {
+          console.error('复制失败:', err);
+        }
+        document.body.removeChild(textarea);
+      }
+
+      // 显示复制成功提示
+      function showCopySuccess(button) {
+        button.classList.add('copied');
+        button.textContent = '✓';
+        setTimeout(() => {
+          button.classList.remove('copied');
+          button.textContent = '📋';
+        }, 2000);
+      }
     </script>
 </body>
 </html>

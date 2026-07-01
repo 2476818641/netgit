@@ -98,31 +98,121 @@
             margin-top: 2rem; 
             margin-bottom: 1rem; 
         }
-        h3 { 
-            color: var(--link-color); 
-            font-size: 1.2rem; 
-            margin-top: 1.5rem; 
+        h3 {
+            color: var(--link-color);
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
         }
-        .rule-card { 
-            border: 1px solid var(--card-border-color); 
-            padding: 0 1.5rem 1.5rem; 
-            border-radius: 8px; 
+        .rule-card {
+            border: 1px solid var(--card-border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
             margin-bottom: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        code { 
-            background-color: var(--code-bg-color); 
-            padding: 0.3em 0.5em; 
-            border-radius: 4px; 
-            font-family: 'SF Mono', 'Menlo', 'Consolas', monospace; 
-            font-size: 0.9em; 
+        .rule-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow-color);
         }
-        pre { 
-            background-color: var(--pre-bg-color); 
-            color: var(--pre-text-color); 
-            padding: 1em 1.5em; 
-            border-radius: 8px; 
-            overflow-x: auto; 
-            font-size: 0.9em; 
+        .rule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .badge-path {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        .badge-url {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+        .badge-host {
+            background-color: #e8f5e9;
+            color: #388e3c;
+        }
+        html[data-theme="dark"] .badge-path {
+            background-color: #1565c0;
+            color: #bbdefb;
+        }
+        html[data-theme="dark"] .badge-url {
+            background-color: #6a1b9a;
+            color: #e1bee7;
+        }
+        html[data-theme="dark"] .badge-host {
+            background-color: #2e7d32;
+            color: #c8e6c9;
+        }
+        .example-container {
+            position: relative;
+            margin-top: 0.5rem;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--code-bg-color);
+            border: 1px solid var(--card-border-color);
+            border-radius: 4px;
+            padding: 0.4rem 0.6rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            opacity: 0.7;
+        }
+        .copy-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            background: var(--link-color);
+        }
+        .copy-btn.copied {
+            background: #4caf50;
+        }
+        .copy-btn.copied::after {
+            content: '✓';
+            position: absolute;
+            top: -1.5rem;
+            right: 0;
+            background: #4caf50;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+        code {
+            background-color: var(--code-bg-color);
+            padding: 0.3em 0.5em;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+            font-size: 0.9em;
+            word-break: break-all;
+        }
+        pre {
+            background-color: var(--pre-bg-color);
+            color: var(--pre-text-color);
+            padding: 1em 3em 1em 1.5em;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.85em;
+            margin: 0;
+            position: relative;
+        }
+        pre code {
+            background: none;
+            padding: 0;
         }
         ul { 
             list-style-type: none; 
@@ -171,176 +261,385 @@
             font-size: 1.2rem;
             transition: background-color 0.3s, transform 0.3s;
         }
-        #theme-toggle:hover { 
-            transform: scale(1.1); 
+        #theme-toggle:hover {
+            transform: scale(1.1);
         }
-        #theme-toggle::after { 
-            content: var(--toggle-icon); 
+        #theme-toggle::after {
+            content: var(--toggle-icon);
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--code-bg-color);
+            border-radius: 8px;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--link-color);
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            .container {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .rule-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .stats {
+                padding: 1rem;
+            }
+            .stat-number {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
     <button id="theme-toggle" title="切换深色/浅色模式"></button>
-    
+
     <div class="container">
-        <h1>欢迎访问 NetGit 代理服务</h1> 
-        
+        <h1>欢迎访问 NetGit 代理服务</h1>
+
         <p>
-            这是一个由 <strong>Cloudflare Pages</strong> 托管的 NetGit 服务入口 (cf.liuass.eu.org)。 
-            本服务旨在提供灵活、快速的代理能力，帮助您轻松访问 GitHub、Docker Hub 等资源。
+            这是一个由 <strong>Cloudflare Pages</strong> 托管的 NetGit 服务入口 (cf.liuass.eu.org)。
+            本服务旨在提供灵活、快速的代理能力，帮助您轻松访问 GitHub、Docker Hub、NPM、PyPI 等资源。
         </p>
-        
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">15</div>
+                <div class="stat-label">代理规则</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">✓</div>
+                <div class="stat-label">健康状态</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">在线服务</div>
+            </div>
+        </div>
+
         <h2>🚀 NetGit 代理规则列表</h2>
-        <p>以下是该服务当前支持的代理规则，您可以方便地使用它们来访问特定的网络资源。</p>
+        <p>以下是该服务当前支持的代理规则，点击 📋 按钮可快速复制使用示例。</p>
         
         
       <div class="rule-card">
-        <h3>GitHub 资源代理</h3>
+        <div class="rule-header">
+          <h3>GitHub 资源代理</h3>
+          <span class="badge badge-url">URL 参数</span>
+        </div>
         <ul>
           <li><strong>代理路径:</strong> <code>/ghproxy/</code></li>
-          <li><strong>代理模式:</strong> <code>URL 参数</code></li>
           
-          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/ghproxy/github.com/louislam/uptime-kuma/archive/refs/tags/2.0.2.zip</code></pre></li>
+          <li>
+            <strong>使用示例:</strong>
+            <div class="example-container">
+              <pre><code id="example--ghproxy-">https://cf.liuass.eu.org/ghproxy/github.com/louislam/uptime-kuma/archive/refs/tags/2.0.2.zip</code></pre>
+              <button class="copy-btn" onclick="copyToClipboard('example--ghproxy-', this)" title="复制示例">
+                📋
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
     
       <div class="rule-card">
-        <h3>GitLab 资源代理</h3>
+        <div class="rule-header">
+          <h3>GitLab 资源代理</h3>
+          <span class="badge badge-url">URL 参数</span>
+        </div>
         <ul>
           <li><strong>代理路径:</strong> <code>/gitlab/</code></li>
-          <li><strong>代理模式:</strong> <code>URL 参数</code></li>
           
-          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/gitlab/gitlab.com/username/project/-/archive/main/project-main.zip</code></pre></li>
+          <li>
+            <strong>使用示例:</strong>
+            <div class="example-container">
+              <pre><code id="example--gitlab-">https://cf.liuass.eu.org/gitlab/gitlab.com/username/project/-/archive/main/project-main.zip</code></pre>
+              <button class="copy-btn" onclick="copyToClipboard('example--gitlab-', this)" title="复制示例">
+                📋
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
     
       <div class="rule-card">
-        <h3>Docker Hub 镜像代理</h3>
+        <div class="rule-header">
+          <h3>Docker Hub 镜像代理</h3>
+          <span class="badge badge-path">路径映射</span>
+        </div>
         <ul>
           <li><strong>代理路径:</strong> <code>/dockerproxy/</code></li>
-          <li><strong>代理模式:</strong> <code>路径映射</code></li>
           <li><strong>目标源站:</strong> <code>https://registry-1.docker.io</code></li>
-          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/dockerproxy/v2/</code></pre></li>
+          <li>
+            <strong>使用示例:</strong>
+            <div class="example-container">
+              <pre><code id="example--dockerproxy-">https://cf.liuass.eu.org/dockerproxy/v2/</code></pre>
+              <button class="copy-btn" onclick="copyToClipboard('example--dockerproxy-', this)" title="复制示例">
+                📋
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
     
       <div class="rule-card">
-        <h3>Google Container Registry 代理</h3>
+        <div class="rule-header">
+          <h3>Google Container Registry 代理</h3>
+          <span class="badge badge-path">路径映射</span>
+        </div>
         <ul>
           <li><strong>代理路径:</strong> <code>/gcr/</code></li>
-          <li><strong>代理模式:</strong> <code>路径映射</code></li>
           <li><strong>目标源站:</strong> <code>https://gcr.io</code></li>
-          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/gcr/v2/</code></pre></li>
+          <li>
+            <strong>使用示例:</strong>
+            <div class="example-container">
+              <pre><code id="example--gcr-">https://cf.liuass.eu.org/gcr/v2/</code></pre>
+              <button class="copy-btn" onclick="copyToClipboard('example--gcr-', this)" title="复制示例">
+                📋
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
     
       <div class="rule-card">
-        <h3>Quay.io 容器镜像代理</h3>
+        <div class="rule-header">
+          <h3>Quay.io 容器镜像代理</h3>
+          <span class="badge badge-path">路径映射</span>
+        </div>
         <ul>
           <li><strong>代理路径:</strong> <code>/quay/</code></li>
-          <li><strong>代理模式:</strong> <code>路径映射</code></li>
           <li><strong>目标源站:</strong> <code>https://quay.io</code></li>
-          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/quay/v2/</code></pre></li>
+          <li>
+            <strong>使用示例:</strong>
+            <div class="example-container">
+              <pre><code id="example--quay-">https://cf.liuass.eu.org/quay/v2/</code></pre>
+              <button class="copy-btn" onclick="copyToClipboard('example--quay-', this)" title="复制示例">
+                📋
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
     
       <div class="rule-card">
-        <h3>GitHub Container Registry 代理</h3>
+        <div class="rule-header">
+          <h3>GitHub Container Registry 代理</h3>
+          <span class="badge badge-path">路径映射</span>
+        </div>
         <ul>
           <li><strong>代理路径:</strong> <code>/ghcr/</code></li>
-          <li><strong>代理模式:</strong> <code>路径映射</code></li>
           <li><strong>目标源站:</strong> <code>https://ghcr.io</code></li>
-          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/ghcr/v2/</code></pre></li>
+          <li>
+            <strong>使用示例:</strong>
+            <div class="example-container">
+              <pre><code id="example--ghcr-">https://cf.liuass.eu.org/ghcr/v2/</code></pre>
+              <button class="copy-btn" onclick="copyToClipboard('example--ghcr-', this)" title="复制示例">
+                📋
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
     
       <div class="rule-card">
-        <h3>NPM 包注册表代理</h3>
+        <div class="rule-header">
+          <h3>NPM 包注册表代理</h3>
+          <span class="badge badge-path">路径映射</span>
+        </div>
         <ul>
           <li><strong>代理路径:</strong> <code>/npm/</code></li>
-          <li><strong>代理模式:</strong> <code>路径映射</code></li>
           <li><strong>目标源站:</strong> <code>https://registry.npmjs.org</code></li>
-          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/npm/vue</code></pre></li>
+          <li>
+            <strong>使用示例:</strong>
+            <div class="example-container">
+              <pre><code id="example--npm-">https://cf.liuass.eu.org/npm/vue</code></pre>
+              <button class="copy-btn" onclick="copyToClipboard('example--npm-', this)" title="复制示例">
+                📋
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
     
       <div class="rule-card">
-        <h3>PyPI Python 包代理</h3>
+        <div class="rule-header">
+          <h3>PyPI Python 包代理</h3>
+          <span class="badge badge-path">路径映射</span>
+        </div>
         <ul>
           <li><strong>代理路径:</strong> <code>/pypi/</code></li>
-          <li><strong>代理模式:</strong> <code>路径映射</code></li>
           <li><strong>目标源站:</strong> <code>https://pypi.org</code></li>
-          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/pypi/simple/pip/</code></pre></li>
+          <li>
+            <strong>使用示例:</strong>
+            <div class="example-container">
+              <pre><code id="example--pypi-">https://cf.liuass.eu.org/pypi/simple/pip/</code></pre>
+              <button class="copy-btn" onclick="copyToClipboard('example--pypi-', this)" title="复制示例">
+                📋
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
     
       <div class="rule-card">
-        <h3>Maven Central 仓库代理</h3>
+        <div class="rule-header">
+          <h3>Maven Central 仓库代理</h3>
+          <span class="badge badge-path">路径映射</span>
+        </div>
         <ul>
           <li><strong>代理路径:</strong> <code>/maven/</code></li>
-          <li><strong>代理模式:</strong> <code>路径映射</code></li>
           <li><strong>目标源站:</strong> <code>https://repo1.maven.org/maven2</code></li>
-          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/maven/org/springframework/spring-core/</code></pre></li>
+          <li>
+            <strong>使用示例:</strong>
+            <div class="example-container">
+              <pre><code id="example--maven-">https://cf.liuass.eu.org/maven/org/springframework/spring-core/</code></pre>
+              <button class="copy-btn" onclick="copyToClipboard('example--maven-', this)" title="复制示例">
+                📋
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
     
       <div class="rule-card">
-        <h3>jsDelivr CDN 代理</h3>
+        <div class="rule-header">
+          <h3>jsDelivr CDN 代理</h3>
+          <span class="badge badge-path">路径映射</span>
+        </div>
         <ul>
           <li><strong>代理路径:</strong> <code>/jsdelivr/</code></li>
-          <li><strong>代理模式:</strong> <code>路径映射</code></li>
           <li><strong>目标源站:</strong> <code>https://cdn.jsdelivr.net</code></li>
-          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/jsdelivr/npm/vue@3/dist/vue.global.js</code></pre></li>
+          <li>
+            <strong>使用示例:</strong>
+            <div class="example-container">
+              <pre><code id="example--jsdelivr-">https://cf.liuass.eu.org/jsdelivr/npm/vue@3/dist/vue.global.js</code></pre>
+              <button class="copy-btn" onclick="copyToClipboard('example--jsdelivr-', this)" title="复制示例">
+                📋
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
     
       <div class="rule-card">
-        <h3>Unpkg CDN 代理</h3>
+        <div class="rule-header">
+          <h3>Unpkg CDN 代理</h3>
+          <span class="badge badge-path">路径映射</span>
+        </div>
         <ul>
           <li><strong>代理路径:</strong> <code>/unpkg/</code></li>
-          <li><strong>代理模式:</strong> <code>路径映射</code></li>
           <li><strong>目标源站:</strong> <code>https://unpkg.com</code></li>
-          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/unpkg/vue@3/dist/vue.global.js</code></pre></li>
+          <li>
+            <strong>使用示例:</strong>
+            <div class="example-container">
+              <pre><code id="example--unpkg-">https://cf.liuass.eu.org/unpkg/vue@3/dist/vue.global.js</code></pre>
+              <button class="copy-btn" onclick="copyToClipboard('example--unpkg-', this)" title="复制示例">
+                📋
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
     
       <div class="rule-card">
-        <h3>Imgur 图片代理</h3>
+        <div class="rule-header">
+          <h3>Imgur 图片代理</h3>
+          <span class="badge badge-path">路径映射</span>
+        </div>
         <ul>
           <li><strong>代理路径:</strong> <code>/imgur/</code></li>
-          <li><strong>代理模式:</strong> <code>路径映射</code></li>
           <li><strong>目标源站:</strong> <code>https://i.imgur.com</code></li>
-          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/imgur/abc123.jpg</code></pre></li>
+          <li>
+            <strong>使用示例:</strong>
+            <div class="example-container">
+              <pre><code id="example--imgur-">https://cf.liuass.eu.org/imgur/abc123.jpg</code></pre>
+              <button class="copy-btn" onclick="copyToClipboard('example--imgur-', this)" title="复制示例">
+                📋
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
     
       <div class="rule-card">
-        <h3>Catbox.moe 文件代理</h3>
+        <div class="rule-header">
+          <h3>Catbox.moe 文件代理</h3>
+          <span class="badge badge-path">路径映射</span>
+        </div>
         <ul>
           <li><strong>代理路径:</strong> <code>/catbox/</code></li>
-          <li><strong>代理模式:</strong> <code>路径映射</code></li>
           <li><strong>目标源站:</strong> <code>https://files.catbox.moe</code></li>
-          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/catbox/yqh1it.png</code></pre></li>
+          <li>
+            <strong>使用示例:</strong>
+            <div class="example-container">
+              <pre><code id="example--catbox-">https://cf.liuass.eu.org/catbox/yqh1it.png</code></pre>
+              <button class="copy-btn" onclick="copyToClipboard('example--catbox-', this)" title="复制示例">
+                📋
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
     
       <div class="rule-card">
-        <h3>Koyeb WebSSH 透明代理 (Host 模式)</h3>
+        <div class="rule-header">
+          <h3>Koyeb WebSSH 透明代理 (Host 模式)</h3>
+          <span class="badge badge-host">Host 模式</span>
+        </div>
         <ul>
           <li><strong>代理路径:</strong> <code>/ssh/</code></li>
-          <li><strong>代理模式:</strong> <code>Host 模式 (透明转发)</code></li>
           <li><strong>目标源站:</strong> <code>subsequent-ardelle-bbttca23-472bd3ef.koyeb.app</code></li>
-          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/ssh/ </code></pre></li>
+          <li>
+            <strong>使用示例:</strong>
+            <div class="example-container">
+              <pre><code id="example--ssh-">https://cf.liuass.eu.org/ssh/ </code></pre>
+              <button class="copy-btn" onclick="copyToClipboard('example--ssh-', this)" title="复制示例">
+                📋
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
     
       <div class="rule-card">
-        <h3>通用 URL 代理（根路径）</h3>
+        <div class="rule-header">
+          <h3>通用 URL 代理（根路径）</h3>
+          <span class="badge badge-url">URL 参数</span>
+        </div>
         <ul>
           <li><strong>代理路径:</strong> <code>/</code></li>
-          <li><strong>代理模式:</strong> <code>URL 参数</code></li>
           
-          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/raw.githubusercontent.com/ACL4SSR/ACL4SSR/refs/heads/master/Clash/config/ACL4SSR_Online.ini</code></pre></li>
+          <li>
+            <strong>使用示例:</strong>
+            <div class="example-container">
+              <pre><code id="example--">https://cf.liuass.eu.org/raw.githubusercontent.com/ACL4SSR/ACL4SSR/refs/heads/master/Clash/config/ACL4SSR_Online.ini</code></pre>
+              <button class="copy-btn" onclick="copyToClipboard('example--', this)" title="复制示例">
+                📋
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
     
@@ -366,6 +665,7 @@
     </div>
 
     <script>
+      // 主题切换功能
       (function() {
         const themeToggle = document.getElementById('theme-toggle');
         const html = document.documentElement;
@@ -390,6 +690,49 @@
           applyTheme('dark');
         }
       })();
+
+      // 复制到剪贴板功能
+      function copyToClipboard(elementId, button) {
+        const element = document.getElementById(elementId);
+        const text = element.textContent;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            showCopySuccess(button);
+          }).catch(err => {
+            fallbackCopy(text, button);
+          });
+        } else {
+          fallbackCopy(text, button);
+        }
+      }
+
+      // 降级复制方法
+      function fallbackCopy(text, button) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand('copy');
+          showCopySuccess(button);
+        } catch (err) {
+          console.error('复制失败:', err);
+        }
+        document.body.removeChild(textarea);
+      }
+
+      // 显示复制成功提示
+      function showCopySuccess(button) {
+        button.classList.add('copied');
+        button.textContent = '✓';
+        setTimeout(() => {
+          button.classList.remove('copied');
+          button.textContent = '📋';
+        }, 2000);
+      }
     </script>
 </body>
 </html>
