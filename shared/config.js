@@ -33,7 +33,14 @@ export const VERCEL_HOME_DOMAIN = "https://vercel.20061021.xyz";
 export const proxyRules = {
   '/health': {
     type: 'health',
-    description: '健康检查端点',
+    format: 'human',
+    description: '健康检查端点（人类可读）',
+    examplePath: ''
+  },
+  '/health/json': {
+    type: 'health',
+    format: 'json',
+    description: '健康检查端点（JSON格式）',
     examplePath: ''
   },
   '/ghproxy/': {
