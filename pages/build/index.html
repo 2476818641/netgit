@@ -215,12 +215,112 @@
       </div>
     
       <div class="rule-card">
+        <h3>GitLab 资源代理</h3>
+        <ul>
+          <li><strong>代理路径:</strong> <code>/gitlab/</code></li>
+          <li><strong>代理模式:</strong> <code>URL 参数</code></li>
+          
+          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/gitlab/gitlab.com/username/project/-/archive/main/project-main.zip</code></pre></li>
+        </ul>
+      </div>
+    
+      <div class="rule-card">
         <h3>Docker Hub 镜像代理</h3>
         <ul>
           <li><strong>代理路径:</strong> <code>/dockerproxy/</code></li>
           <li><strong>代理模式:</strong> <code>路径映射</code></li>
           <li><strong>目标源站:</strong> <code>https://registry-1.docker.io</code></li>
           <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/dockerproxy/v2/</code></pre></li>
+        </ul>
+      </div>
+    
+      <div class="rule-card">
+        <h3>Google Container Registry 代理</h3>
+        <ul>
+          <li><strong>代理路径:</strong> <code>/gcr/</code></li>
+          <li><strong>代理模式:</strong> <code>路径映射</code></li>
+          <li><strong>目标源站:</strong> <code>https://gcr.io</code></li>
+          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/gcr/v2/</code></pre></li>
+        </ul>
+      </div>
+    
+      <div class="rule-card">
+        <h3>Quay.io 容器镜像代理</h3>
+        <ul>
+          <li><strong>代理路径:</strong> <code>/quay/</code></li>
+          <li><strong>代理模式:</strong> <code>路径映射</code></li>
+          <li><strong>目标源站:</strong> <code>https://quay.io</code></li>
+          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/quay/v2/</code></pre></li>
+        </ul>
+      </div>
+    
+      <div class="rule-card">
+        <h3>GitHub Container Registry 代理</h3>
+        <ul>
+          <li><strong>代理路径:</strong> <code>/ghcr/</code></li>
+          <li><strong>代理模式:</strong> <code>路径映射</code></li>
+          <li><strong>目标源站:</strong> <code>https://ghcr.io</code></li>
+          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/ghcr/v2/</code></pre></li>
+        </ul>
+      </div>
+    
+      <div class="rule-card">
+        <h3>NPM 包注册表代理</h3>
+        <ul>
+          <li><strong>代理路径:</strong> <code>/npm/</code></li>
+          <li><strong>代理模式:</strong> <code>路径映射</code></li>
+          <li><strong>目标源站:</strong> <code>https://registry.npmjs.org</code></li>
+          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/npm/vue</code></pre></li>
+        </ul>
+      </div>
+    
+      <div class="rule-card">
+        <h3>PyPI Python 包代理</h3>
+        <ul>
+          <li><strong>代理路径:</strong> <code>/pypi/</code></li>
+          <li><strong>代理模式:</strong> <code>路径映射</code></li>
+          <li><strong>目标源站:</strong> <code>https://pypi.org</code></li>
+          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/pypi/simple/pip/</code></pre></li>
+        </ul>
+      </div>
+    
+      <div class="rule-card">
+        <h3>Maven Central 仓库代理</h3>
+        <ul>
+          <li><strong>代理路径:</strong> <code>/maven/</code></li>
+          <li><strong>代理模式:</strong> <code>路径映射</code></li>
+          <li><strong>目标源站:</strong> <code>https://repo1.maven.org/maven2</code></li>
+          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/maven/org/springframework/spring-core/</code></pre></li>
+        </ul>
+      </div>
+    
+      <div class="rule-card">
+        <h3>jsDelivr CDN 代理</h3>
+        <ul>
+          <li><strong>代理路径:</strong> <code>/jsdelivr/</code></li>
+          <li><strong>代理模式:</strong> <code>路径映射</code></li>
+          <li><strong>目标源站:</strong> <code>https://cdn.jsdelivr.net</code></li>
+          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/jsdelivr/npm/vue@3/dist/vue.global.js</code></pre></li>
+        </ul>
+      </div>
+    
+      <div class="rule-card">
+        <h3>Unpkg CDN 代理</h3>
+        <ul>
+          <li><strong>代理路径:</strong> <code>/unpkg/</code></li>
+          <li><strong>代理模式:</strong> <code>路径映射</code></li>
+          <li><strong>目标源站:</strong> <code>https://unpkg.com</code></li>
+          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/unpkg/vue@3/dist/vue.global.js</code></pre></li>
+        </ul>
+      </div>
+    
+      <div class="rule-card">
+        <h3>Imgur 图片代理</h3>
+        <ul>
+          <li><strong>代理路径:</strong> <code>/imgur/</code></li>
+          <li><strong>代理模式:</strong> <code>路径映射</code></li>
+          <li><strong>目标源站:</strong> <code>https://i.imgur.com</code></li>
+          <li><strong>使用示例:</strong> <pre><code>https://cf.liuass.eu.org/imgur/abc123.jpg</code></pre></li>
         </ul>
       </div>
     

@@ -11,6 +11,20 @@ export async function handleRequest(request) {
             const rule = proxyRules[prefix];
             let targetUrlStr;
 
+            // 健康检查端点
+            if (rule.type === 'health') {
+                return {
+                    status: 'health',
+                    data: {
+                        status: 'healthy',
+                        timestamp: new Date().toISOString(),
+                        uptime: typeof process !== 'undefined' && process.uptime ? process.uptime() : 'N/A',
+                        service: 'NetGit Proxy Service',
+                        version: '1.1.0'
+                    }
+                };
+            }
+
             if (rule.type === 'path') {
                 const subpath = path.substring(prefix.length);
                 targetUrlStr = `${rule.target}/${subpath}${url.search}`;

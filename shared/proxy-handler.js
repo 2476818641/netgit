@@ -39,6 +39,16 @@ export async function proxyWithCache(request, cacheManager = null) {
   const result = await handleRequest(request);
 
   switch (result.status) {
+    case 'health': {
+      return new Response(JSON.stringify(result.data, null, 2), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          ...getCacheControlHeaders(false)
+        }
+      });
+    }
+
     case 'proxy': {
       const targetUrl = result.targetUrl;
       const cacheKey = cacheManager ? cacheManager.generateCacheKey(targetUrl) : null;
