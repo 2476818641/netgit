@@ -35,8 +35,8 @@ export function normalizeRequestHeaders(headers) {
   return normalized;
 }
 
-export async function proxyWithCache(request, cacheManager = null) {
-  const result = await handleRequest(request);
+export async function proxyWithCache(request, cacheManager = null, KV = null) {
+  const result = await handleRequest(request, KV);
 
   switch (result.status) {
     case 'health': {
@@ -65,14 +65,33 @@ export async function proxyWithCache(request, cacheManager = null) {
                             target.latency < 200 ? '#4caf50' :
                             target.latency < 500 ? '#ff9800' : '#f44336';
 
+        // 获取30天统计数据
+        let stats30dCell = '-';
+        if (data.stats30d && data.stats30d.targets[target.name]) {
+          const stats = data.stats30d.targets[target.name];
+          stats30dCell = '<div style="font-size: 0.85rem;">' +
+            '<div>平均: <strong>' + stats.avgLatency + 'ms</strong></div>' +
+            '<div>可用率: <strong style="color: ' + (stats.availability >= 99 ? '#4caf50' : stats.availability >= 95 ? '#ff9800' : '#f44336') + ';">' + stats.availability + '%</strong></div>' +
+            '</div>';
+        }
+
         targetsHtml += '<tr>' +
           '<td>' + targetEmoji + ' ' + target.name + '</td>' +
           '<td><span class="badge badge-' + target.type + '">' + target.type + '</span></td>' +
           '<td style="color: ' + latencyColor + '; font-weight: bold;">' + latencyText + '</td>' +
+          '<td>' + stats30dCell + '</td>' +
           '<td>' + (target.statusCode || '-') + '</td>' +
           '<td><code class="url-code">' + target.url + '</code></td>' +
         '</tr>';
       });
+
+      // 生成统计摘要信息
+      let statsInfoHtml = '';
+      if (data.stats30d) {
+        statsInfoHtml = '<div style="background: #e3f2fd; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">' +
+          '<p style="color: #1976d2; margin: 0;"><strong>📊 30天统计数据</strong>：基于 ' + data.stats30d.summary.totalChecks + ' 次检查（' + data.stats30d.summary.daysWithData + ' 天有数据）</p>' +
+        '</div>';
+      }
 
       const html = '<!DOCTYPE html>' +
 '<html lang="zh-CN">' +
@@ -237,13 +256,15 @@ export async function proxyWithCache(request, cacheManager = null) {
 '            </div>' +
 '        </div>' +
 '        <div class="content">' +
+            statsInfoHtml +
 '            <h2>🎯 目标服务延迟检测</h2>' +
 '            <table>' +
 '                <thead>' +
 '                    <tr>' +
 '                        <th>服务名称</th>' +
 '                        <th>类型</th>' +
-'                        <th>延迟</th>' +
+'                        <th>实时延迟</th>' +
+'                        <th>30天统计</th>' +
 '                        <th>状态码</th>' +
 '                        <th>目标地址</th>' +
 '                    </tr>' +

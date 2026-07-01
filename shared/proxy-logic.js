@@ -1,72 +1,7 @@
 import { proxyRules } from './config.js';
+import { checkAllTargets, get30DayStats } from './health-checker.js';
 
-// 定义需要检测延迟的目标
-const healthCheckTargets = [
-  { name: 'GitHub', url: 'https://api.github.com', type: 'api' },
-  { name: 'GitHub Raw', url: 'https://raw.githubusercontent.com', type: 'cdn' },
-  { name: 'GitLab', url: 'https://gitlab.com', type: 'api' },
-  { name: 'Docker Hub', url: 'https://registry-1.docker.io/v2/', type: 'registry' },
-  { name: 'NPM Registry', url: 'https://registry.npmjs.org', type: 'registry' },
-  { name: 'PyPI', url: 'https://pypi.org', type: 'registry' },
-  { name: 'jsDelivr CDN', url: 'https://cdn.jsdelivr.net', type: 'cdn' },
-  { name: 'Unpkg CDN', url: 'https://unpkg.com', type: 'cdn' }
-];
-
-// 检测单个目标的延迟
-async function checkTargetLatency(target) {
-  const startTime = Date.now();
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
-
-    const response = await fetch(target.url, {
-      method: 'HEAD',
-      signal: controller.signal
-    });
-
-    clearTimeout(timeoutId);
-    const latency = Date.now() - startTime;
-
-    return {
-      name: target.name,
-      type: target.type,
-      url: target.url,
-      status: response.ok ? 'healthy' : 'degraded',
-      latency: latency,
-      statusCode: response.status,
-      available: true
-    };
-  } catch (error) {
-    const latency = Date.now() - startTime;
-    return {
-      name: target.name,
-      type: target.type,
-      url: target.url,
-      status: 'unhealthy',
-      latency: latency >= 5000 ? 'timeout' : latency,
-      error: error.message,
-      available: false
-    };
-  }
-}
-
-// 批量检测所有目标
-async function checkAllTargets() {
-  const results = await Promise.all(
-    healthCheckTargets.map(target => checkTargetLatency(target))
-  );
-
-  const summary = {
-    total: results.length,
-    healthy: results.filter(r => r.status === 'healthy').length,
-    degraded: results.filter(r => r.status === 'degraded').length,
-    unhealthy: results.filter(r => r.status === 'unhealthy').length
-  };
-
-  return { targets: results, summary };
-}
-
-export async function handleRequest(request) {
+export async function handleRequest(request, KV = null) {
     const url = new URL(request.url);
     const path = url.pathname;
 
@@ -83,6 +18,9 @@ export async function handleRequest(request) {
                 const checkResults = await checkAllTargets();
                 const uptime = typeof process !== 'undefined' && process.uptime ? process.uptime() : 'N/A';
 
+                // 获取30天统计数据
+                const stats30d = await get30DayStats(KV);
+
                 const healthData = {
                     status: checkResults.summary.healthy === checkResults.summary.total ? 'healthy' :
                             checkResults.summary.unhealthy === checkResults.summary.total ? 'unhealthy' : 'degraded',
@@ -90,7 +28,8 @@ export async function handleRequest(request) {
                     uptime: uptime,
                     service: 'NetGit Proxy Service',
                     version: '1.2.0',
-                    checks: checkResults
+                    checks: checkResults,
+                    stats30d: stats30d
                 };
 
                 return {
