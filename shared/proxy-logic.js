@@ -70,7 +70,10 @@ export async function handleRequest(request) {
     const url = new URL(request.url);
     const path = url.pathname;
 
-    for (const prefix in proxyRules) {
+    // 对规则按前缀长度降序排序，确保更长的路径优先匹配
+    const sortedPrefixes = Object.keys(proxyRules).sort((a, b) => b.length - a.length);
+
+    for (const prefix of sortedPrefixes) {
         if (path.startsWith(prefix)) {
             const rule = proxyRules[prefix];
             let targetUrlStr;
