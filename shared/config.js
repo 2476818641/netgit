@@ -36,29 +36,6 @@ export const proxyRules = {
     description: '健康检查端点',
     examplePath: ''
   },
-  '/': {
-    type: 'url',
-    description: '通用 URL 代理（根路径）',
-    examplePath: 'https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/refs/heads/master/Clash/config/ACL4SSR_Online.ini',
-    allowedDomains: [
-      // GitHub 相关
-      'github.com', 'raw.githubusercontent.com', 'user-images.githubusercontent.com',
-      'avatars.githubusercontent.com', 'objects.githubusercontent.com', 'gist.github.com',
-      'github.githubassets.com', 'camo.githubusercontent.com', 'gist.githubusercontent.com',
-      // GitLab
-      'gitlab.com', 'gitlab.io',
-      // Bitbucket
-      'bitbucket.org',
-      // 其他代码托管
-      'gitee.com', 'coding.net',
-      // CDN 资源
-      'cdn.jsdelivr.net', 'unpkg.com', 'cdnjs.cloudflare.com',
-      // 图片托管
-      'i.imgur.com', 'imgur.com', 'files.catbox.moe', 'i.postimg.cc',
-      // 文档和资源
-      'raw.githubusercontent.com'
-    ]
-  },
   '/ghproxy/': {
     type: 'url',
     description: 'GitHub 资源代理',
@@ -146,6 +123,29 @@ export const proxyRules = {
     target: 'subsequent-ardelle-bbttca23-472bd3ef.koyeb.app',
     description: 'Koyeb WebSSH 透明代理 (Host 模式)',
     examplePath: ' '
+  },
+  '/': {
+    type: 'url',
+    description: '通用 URL 代理（根路径）',
+    examplePath: 'https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/refs/heads/master/Clash/config/ACL4SSR_Online.ini',
+    allowedDomains: [
+      // GitHub 相关
+      'github.com', 'raw.githubusercontent.com', 'user-images.githubusercontent.com',
+      'avatars.githubusercontent.com', 'objects.githubusercontent.com', 'gist.github.com',
+      'github.githubassets.com', 'camo.githubusercontent.com', 'gist.githubusercontent.com',
+      // GitLab
+      'gitlab.com', 'gitlab.io',
+      // Bitbucket
+      'bitbucket.org',
+      // 其他代码托管
+      'gitee.com', 'coding.net',
+      // CDN 资源
+      'cdn.jsdelivr.net', 'unpkg.com', 'cdnjs.cloudflare.com',
+      // 图片托管
+      'i.imgur.com', 'imgur.com', 'files.catbox.moe', 'i.postimg.cc',
+      // 文档和资源
+      'raw.githubusercontent.com'
+    ]
   }
 };
 
