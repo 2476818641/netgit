@@ -1,0 +1,11 @@
+{
+  "name": "cf-pages-home",
+  "version": "1.0.0",
+  "description": "Static home page for Cloudflare Workers proxy, hosted on Pages.",
+  "main": "generate-home.js",
+  "type": "module",
+  "scripts": {
+    "build": "node generate-home.js && cp ../worker/src/proxy-worker.js build/_worker.js"
+  },
+  "devDependencies": {}
+}

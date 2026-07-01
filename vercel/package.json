@@ -1,0 +1,11 @@
+{
+  "name": "vercel-proxy-frontend",
+  "version": "1.0.0",
+  "description": "Static frontend and serverless function for Vercel proxy.",
+  "main": "generate-home.js",
+  "type": "module",
+  "scripts": {
+    "build": "node generate-home.js"
+  },
+  "devDependencies": {}
+}

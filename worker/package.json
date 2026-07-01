@@ -1,0 +1,13 @@
+{
+  "name": "proxy-worker",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker for proxy specific requests.",
+  "main": "src/proxy-worker.js",
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler publish"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0" 
+  }
+}
